@@ -68,7 +68,7 @@ func newTraceProcessor(logger *zap.Logger, nextConsumer consumer.TraceConsumerOl
 		return nil, oterr.ErrNilNextConsumer
 	}
 
-	if cfg.PeerDiscoveryDNSName != "" {
+	if cfg.PeerDiscoveryDNSName == "" {
 		return nil, fmt.Errorf("peer discovery DNS name not provided")
 	}
 
