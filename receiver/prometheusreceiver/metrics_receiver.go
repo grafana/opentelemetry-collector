@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/prometheus/prometheus/discovery"
-	sd_config "github.com/prometheus/prometheus/discovery/config"
 	"github.com/prometheus/prometheus/scrape"
 	"go.uber.org/zap"
 
@@ -93,9 +92,9 @@ func (pr *Preceiver) Start(ctx context.Context, host component.Host) error {
 		// By this point we've given time to the scrape manager
 		// to start applying its original configuration.
 
-		discoveryCfg := make(map[string]sd_config.ServiceDiscoveryConfig)
+		discoveryCfg := make(map[string]discovery.Configs)
 		for _, scrapeConfig := range pr.cfg.PrometheusConfig.ScrapeConfigs {
-			discoveryCfg[scrapeConfig.JobName] = scrapeConfig.ServiceDiscoveryConfig
+			discoveryCfg[scrapeConfig.JobName] = scrapeConfig.ServiceDiscoveryConfigs
 		}
 
 		// Now trigger the discovery notification to the scrape manager.

@@ -23,32 +23,32 @@ import (
 )
 
 func TestOcaStore(t *testing.T) {
+	ctx := context.Background()
+	o := NewOcaStore(ctx, nil, nil, nil, false, "prometheus")
 
-	o := NewOcaStore(context.Background(), nil, nil, nil, false, "prometheus")
-
-	_, err := o.Appender()
-	if err == nil {
-		t.Fatal("expecting error, but get nil")
+	app := o.Appender(ctx)
+	if app != nil {
+		t.Fatal("expecting nil, but got app")
 	}
 
 	o.SetScrapeManager(nil)
-	_, err = o.Appender()
-	if err == nil {
-		t.Fatal("expecting error when ScrapeManager is not set, but get nil")
+	app = o.Appender(ctx)
+	if app != nil {
+		t.Fatal("expecting error when ScrapeManager is not set, but got app")
 	}
 
 	o.SetScrapeManager(&scrape.Manager{})
 
-	app, err := o.Appender()
+	app = o.Appender(ctx)
 	if app == nil {
-		t.Fatalf("expecting app, but got error %v\n", err)
+		t.Fatalf("expecting app, but got nil\n")
 	}
 
 	_ = o.Close()
 
-	app, err = o.Appender()
-	if app != noop || err != nil {
-		t.Fatalf("expect app!=nil and err==nil, got app=%v and err=%v", app, err)
+	app = o.Appender(ctx)
+	if app != noop {
+		t.Fatalf("expect app!=nil, got app=%v", app)
 	}
 }
 
@@ -60,7 +60,7 @@ func TestNoopAppender(t *testing.T) {
 		t.Error("expecting error from Add method of noopApender")
 	}
 
-	if err := noop.AddFast(labels.FromStrings("t", "v"), 0, 1, 1); err == nil {
+	if err := noop.AddFast(0, 1, 1); err == nil {
 		t.Error("expecting error from AddFast method of noopApender")
 	}
 

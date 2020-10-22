@@ -92,31 +92,31 @@ var _ storage.Appender = (*transaction)(nil)
 // uniqKey kind of thing for storage like a database, so that the operation can be perform faster with this key.
 // however, in this case, return 0 like what the prometheus remote store does shall be enough
 func (tr *transaction) Add(l labels.Labels, t int64, v float64) (uint64, error) {
-	return 0, tr.AddFast(l, 0, t, v)
-}
-
-// returning an error from this method can cause the whole appending transaction to be aborted and fail
-func (tr *transaction) AddFast(ls labels.Labels, _ uint64, t int64, v float64) error {
 	// Important, must handle. prometheus will still try to feed the appender some data even if it failed to
 	// scrape the remote target,  if the previous scrape was success and some data were cached internally
 	// in our case, we don't need these data, simply drop them shall be good enough. more details:
 	// https://github.com/prometheus/prometheus/blob/851131b0740be7291b98f295567a97f32fffc655/scrape/scrape.go#L933-L935
 	if math.IsNaN(v) {
-		return nil
+		return 0, nil
 	}
 
 	select {
 	case <-tr.ctx.Done():
-		return errTransactionAborted
+		return 0, errTransactionAborted
 	default:
 	}
 
 	if tr.isNew {
-		if err := tr.initTransaction(ls); err != nil {
-			return err
+		if err := tr.initTransaction(l); err != nil {
+			return 0, err
 		}
 	}
-	return tr.metricBuilder.AddDataPoint(ls, t, v)
+	return 0, tr.metricBuilder.AddDataPoint(l, t, v)
+}
+
+// returning an error from this method can cause the whole appending transaction to be aborted and fail
+func (tr *transaction) AddFast(_ uint64, _ int64, _ float64) error {
+	return storage.ErrNotFound
 }
 
 func (tr *transaction) initTransaction(ls labels.Labels) error {
