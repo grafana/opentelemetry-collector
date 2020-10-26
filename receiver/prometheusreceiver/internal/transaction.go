@@ -88,9 +88,10 @@ func newTransaction(ctx context.Context, jobsMap *JobsMap, useStartTimeMetric bo
 // ensure *transaction has implemented the storage.Appender interface
 var _ storage.Appender = (*transaction)(nil)
 
-// there's no document on the first return value, however, it's somehow used in AddFast. I assume this is like a
-// uniqKey kind of thing for storage like a database, so that the operation can be perform faster with this key.
-// however, in this case, return 0 like what the prometheus remote store does shall be enough
+// Add appends a new sample for a new series. The return value is a (ref ID,
+// error), where the ref ID can be used to refer to that series (instead of the
+// set of labels) going forward. The series reference ID is just an
+// optimization and can be skipped; we won't use it and will always return 0.
 func (tr *transaction) Add(l labels.Labels, t int64, v float64) (uint64, error) {
 	// Important, must handle. prometheus will still try to feed the appender some data even if it failed to
 	// scrape the remote target,  if the previous scrape was success and some data were cached internally
@@ -114,7 +115,9 @@ func (tr *transaction) Add(l labels.Labels, t int64, v float64) (uint64, error) 
 	return 0, tr.metricBuilder.AddDataPoint(l, t, v)
 }
 
-// returning an error from this method can cause the whole appending transaction to be aborted and fail
+// AddFast appends a sample for an existing series by ref ID. We're not tracking
+// ref IDs, so we'll always return storage.ErrNotFound. This will cause Prometheus
+// to fall back to calling Add.
 func (tr *transaction) AddFast(_ uint64, _ int64, _ float64) error {
 	return storage.ErrNotFound
 }
