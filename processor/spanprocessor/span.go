@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/processor/filterspan"
+	"go.opentelemetry.io/collector/external/processor/filterspan"
 )
 
 type spanProcessor struct {

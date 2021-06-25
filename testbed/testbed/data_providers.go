@@ -26,9 +26,9 @@ import (
 
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/goldendataset"
-	"go.opentelemetry.io/collector/internal/idutils"
-	"go.opentelemetry.io/collector/internal/otlp"
+	"go.opentelemetry.io/collector/external/goldendataset"
+	"go.opentelemetry.io/collector/external/idutils"
+	"go.opentelemetry.io/collector/external/otlp"
 )
 
 // DataProvider defines the interface for generators of test data used to drive various end-to-end tests.

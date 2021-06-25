@@ -21,8 +21,8 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/internal/processor/filterlog"
-	"go.opentelemetry.io/collector/internal/processor/filterspan"
+	"go.opentelemetry.io/collector/external/processor/filterlog"
+	"go.opentelemetry.io/collector/external/processor/filterspan"
 	"go.opentelemetry.io/collector/processor/processorhelper"
 )
 

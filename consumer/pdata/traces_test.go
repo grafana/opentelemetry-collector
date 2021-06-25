@@ -24,9 +24,9 @@ import (
 	goproto "google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.opentelemetry.io/collector/internal"
-	otlpcollectortrace "go.opentelemetry.io/collector/internal/data/protogen/collector/trace/v1"
-	otlptrace "go.opentelemetry.io/collector/internal/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/external"
+	otlpcollectortrace "go.opentelemetry.io/collector/external/data/protogen/collector/trace/v1"
+	otlptrace "go.opentelemetry.io/collector/external/data/protogen/trace/v1"
 )
 
 func TestTracesMarshal_TranslationError(t *testing.T) {

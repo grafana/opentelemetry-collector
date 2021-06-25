@@ -30,8 +30,8 @@ import (
 	"go.opentelemetry.io/collector/consumer/consumererror"
 	"go.opentelemetry.io/collector/consumer/consumerhelper"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/obsreportconfig/obsmetrics"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/obsreportconfig/obsmetrics"
+	"go.opentelemetry.io/collector/external/testdata"
 	"go.opentelemetry.io/collector/obsreport/obsreporttest"
 )
 

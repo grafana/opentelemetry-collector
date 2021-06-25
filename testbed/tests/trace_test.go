@@ -30,7 +30,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/idutils"
+	"go.opentelemetry.io/collector/external/idutils"
 	"go.opentelemetry.io/collector/testbed/testbed"
 	"go.opentelemetry.io/collector/translator/conventions"
 )

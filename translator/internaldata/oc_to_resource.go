@@ -22,7 +22,7 @@ import (
 	"go.opencensus.io/resource/resourcekeys"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/occonventions"
+	"go.opentelemetry.io/collector/external/occonventions"
 	"go.opentelemetry.io/collector/translator/conventions"
 )
 

@@ -28,9 +28,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/idutils"
+	"go.opentelemetry.io/collector/external/idutils"
 	tracetranslator "go.opentelemetry.io/collector/translator/trace"
-	"go.opentelemetry.io/collector/translator/trace/internal/zipkin"
+	"go.opentelemetry.io/collector/translator/trace/external/zipkin"
 )
 
 var (

@@ -18,7 +18,7 @@ import (
 	"github.com/Shopify/sarama"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/otlp"
+	"go.opentelemetry.io/collector/external/otlp"
 )
 
 // TracesMarshaler marshals traces into Message array.

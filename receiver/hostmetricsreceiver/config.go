@@ -22,7 +22,7 @@ import (
 
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/config/configparser"
-	"go.opentelemetry.io/collector/receiver/hostmetricsreceiver/internal"
+	"go.opentelemetry.io/collector/receiver/hostmetricsreceiver/external"
 	"go.opentelemetry.io/collector/receiver/scraperhelper"
 )
 

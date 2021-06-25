@@ -17,9 +17,9 @@ package pdata
 import (
 	"fmt"
 
-	"go.opentelemetry.io/collector/internal"
-	otlpcollectormetrics "go.opentelemetry.io/collector/internal/data/protogen/collector/metrics/v1"
-	otlpmetrics "go.opentelemetry.io/collector/internal/data/protogen/metrics/v1"
+	"go.opentelemetry.io/collector/external"
+	otlpcollectormetrics "go.opentelemetry.io/collector/external/data/protogen/collector/metrics/v1"
+	otlpmetrics "go.opentelemetry.io/collector/external/data/protogen/metrics/v1"
 )
 
 // MetricsDecoder is an interface to decode bytes into protocol-specific data model.

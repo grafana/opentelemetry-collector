@@ -20,7 +20,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
-	"go.opentelemetry.io/collector/internal/sharedcomponent"
+	"go.opentelemetry.io/collector/external/sharedcomponent"
 )
 
 const (

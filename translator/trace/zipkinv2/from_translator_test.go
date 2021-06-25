@@ -22,8 +22,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/goldendataset"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/goldendataset"
+	"go.opentelemetry.io/collector/external/testdata"
 )
 
 func TestInternalTracesToZipkinSpans(t *testing.T) {
@@ -86,8 +86,8 @@ func TestInternalTracesToZipkinSpans(t *testing.T) {
 
 func TestInternalTracesToZipkinSpansAndBack(t *testing.T) {
 	tds, err := goldendataset.GenerateTraces(
-		"../../../internal/goldendataset/testdata/generated_pict_pairs_traces.txt",
-		"../../../internal/goldendataset/testdata/generated_pict_pairs_spans.txt")
+		"../../../external/goldendataset/testdata/generated_pict_pairs_traces.txt",
+		"../../../external/goldendataset/testdata/generated_pict_pairs_spans.txt")
 	assert.NoError(t, err)
 	for _, td := range tds {
 		ret, err := FromTranslator{}.FromTraces(td)

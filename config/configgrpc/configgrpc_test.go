@@ -33,7 +33,7 @@ import (
 	"go.opentelemetry.io/collector/config/confignet"
 	"go.opentelemetry.io/collector/config/configtls"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/pdatagrpc"
+	"go.opentelemetry.io/collector/external/pdatagrpc"
 )
 
 func TestDefaultGrpcClientSettings(t *testing.T) {

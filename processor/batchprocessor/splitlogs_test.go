@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/testdata"
 )
 
 func TestSplitLogs_noop(t *testing.T) {

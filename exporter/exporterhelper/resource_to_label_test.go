@@ -18,7 +18,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/testdata"
 )
 
 func TestConvertResourceToLabels(t *testing.T) {

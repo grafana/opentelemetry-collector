@@ -26,7 +26,7 @@ import (
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/consumer/pdata"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
-	"go.opentelemetry.io/collector/internal/otlptext"
+	"go.opentelemetry.io/collector/external/otlptext"
 )
 
 type loggingExporter struct {

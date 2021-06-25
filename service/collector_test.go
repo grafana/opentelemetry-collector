@@ -36,7 +36,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configparser"
 	"go.opentelemetry.io/collector/service/defaultcomponents"
-	"go.opentelemetry.io/collector/service/internal/builder"
+	"go.opentelemetry.io/collector/service/external/builder"
 	"go.opentelemetry.io/collector/service/parserprovider"
 	"go.opentelemetry.io/collector/testutil"
 )

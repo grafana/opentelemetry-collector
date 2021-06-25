@@ -17,7 +17,7 @@ package main
 import (
 	"os"
 
-	"go.opentelemetry.io/collector/cmd/pdatagen/internal"
+	"go.opentelemetry.io/collector/cmd/pdatagen/external"
 )
 
 func check(e error) {

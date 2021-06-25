@@ -29,11 +29,11 @@ import (
 	"go.opentelemetry.io/collector/config/configgrpc"
 	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/internal/otlp"
-	"go.opentelemetry.io/collector/internal/pdatagrpc"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/logs"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/metrics"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/trace"
+	"go.opentelemetry.io/collector/external/otlp"
+	"go.opentelemetry.io/collector/external/pdatagrpc"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/logs"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/metrics"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/trace"
 )
 
 const (

@@ -37,8 +37,8 @@ import (
 	"go.opentelemetry.io/collector/consumer/consumererror"
 	"go.opentelemetry.io/collector/consumer/pdata"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
-	"go.opentelemetry.io/collector/internal/middleware"
-	"go.opentelemetry.io/collector/internal/otlp"
+	"go.opentelemetry.io/collector/external/middleware"
+	"go.opentelemetry.io/collector/external/otlp"
 )
 
 type exporter struct {

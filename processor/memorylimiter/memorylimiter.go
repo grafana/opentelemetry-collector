@@ -26,7 +26,7 @@ import (
 
 	"go.opentelemetry.io/collector/config/configtelemetry"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/iruntime"
+	"go.opentelemetry.io/collector/external/iruntime"
 	"go.opentelemetry.io/collector/obsreport"
 )
 

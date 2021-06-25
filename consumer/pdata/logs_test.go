@@ -21,9 +21,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go.opentelemetry.io/collector/internal"
-	otlpcollectorlog "go.opentelemetry.io/collector/internal/data/protogen/collector/logs/v1"
-	otlplogs "go.opentelemetry.io/collector/internal/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/external"
+	otlpcollectorlog "go.opentelemetry.io/collector/external/data/protogen/collector/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/external/data/protogen/logs/v1"
 )
 
 func TestLogsMarshal_TranslationError(t *testing.T) {

@@ -17,9 +17,9 @@ package pdata
 import (
 	"fmt"
 
-	"go.opentelemetry.io/collector/internal"
-	otlpcollectorlog "go.opentelemetry.io/collector/internal/data/protogen/collector/logs/v1"
-	otlplogs "go.opentelemetry.io/collector/internal/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/external"
+	otlpcollectorlog "go.opentelemetry.io/collector/external/data/protogen/collector/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/external/data/protogen/logs/v1"
 )
 
 // LogsDecoder is an interface to decode bytes into protocol-specific data model.

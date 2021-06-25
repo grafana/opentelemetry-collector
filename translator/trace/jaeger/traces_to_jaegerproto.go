@@ -20,7 +20,7 @@ import (
 	"github.com/jaegertracing/jaeger/model"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	idutils "go.opentelemetry.io/collector/internal/idutils"
+	idutils "go.opentelemetry.io/collector/external/idutils"
 	"go.opentelemetry.io/collector/translator/conventions"
 	tracetranslator "go.opentelemetry.io/collector/translator/trace"
 )

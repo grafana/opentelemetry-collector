@@ -20,7 +20,7 @@ import (
 	"strings"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/processor/filterhelper"
+	"go.opentelemetry.io/collector/external/processor/filterhelper"
 )
 
 // Settings specifies the processor settings.

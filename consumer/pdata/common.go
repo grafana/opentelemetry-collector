@@ -20,7 +20,7 @@ package pdata
 import (
 	"sort"
 
-	otlpcommon "go.opentelemetry.io/collector/internal/data/protogen/common/v1"
+	otlpcommon "go.opentelemetry.io/collector/external/data/protogen/common/v1"
 )
 
 // AttributeValueType specifies the type of AttributeValue.

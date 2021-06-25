@@ -18,7 +18,7 @@ import (
 	"context"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/processor/filterlog"
+	"go.opentelemetry.io/collector/external/processor/filterlog"
 	"go.opentelemetry.io/collector/processor/processorhelper"
 )
 

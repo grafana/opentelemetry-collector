@@ -25,7 +25,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/obsreport"
-	"go.opentelemetry.io/collector/receiver/prometheusreceiver/internal"
+	"go.opentelemetry.io/collector/receiver/prometheusreceiver/external"
 )
 
 const transport = "http"

@@ -24,7 +24,7 @@ import (
 
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/testdata"
 )
 
 func TestLoggingTracesExporterNoErrors(t *testing.T) {

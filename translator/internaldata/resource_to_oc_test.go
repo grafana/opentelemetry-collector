@@ -28,8 +28,8 @@ import (
 	"google.golang.org/protobuf/testing/protocmp"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/goldendataset"
-	"go.opentelemetry.io/collector/internal/occonventions"
+	"go.opentelemetry.io/collector/external/goldendataset"
+	"go.opentelemetry.io/collector/external/occonventions"
 	"go.opentelemetry.io/collector/translator/conventions"
 )
 

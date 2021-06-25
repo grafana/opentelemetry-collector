@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/goldendataset"
+	"go.opentelemetry.io/collector/external/goldendataset"
 )
 
 func TestSameMetrics(t *testing.T) {

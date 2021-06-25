@@ -27,9 +27,9 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
 	"go.opentelemetry.io/collector/consumer/pdata"
-	otlptrace "go.opentelemetry.io/collector/internal/data/protogen/trace/v1"
-	"go.opentelemetry.io/collector/internal/occonventions"
-	"go.opentelemetry.io/collector/internal/testdata"
+	otlptrace "go.opentelemetry.io/collector/external/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/external/occonventions"
+	"go.opentelemetry.io/collector/external/testdata"
 )
 
 func TestOcTraceStateToInternal(t *testing.T) {

@@ -25,9 +25,9 @@ import (
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/processor/filterconfig"
-	"go.opentelemetry.io/collector/internal/processor/filterset"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/processor/filterconfig"
+	"go.opentelemetry.io/collector/external/processor/filterset"
+	"go.opentelemetry.io/collector/external/testdata"
 	"go.opentelemetry.io/collector/processor/processorhelper"
 )
 

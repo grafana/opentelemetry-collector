@@ -26,11 +26,11 @@ import (
 
 	"go.opentelemetry.io/collector/config/configtelemetry"
 	"go.opentelemetry.io/collector/exporter/jaegerexporter"
-	"go.opentelemetry.io/collector/internal/collector/telemetry"
-	"go.opentelemetry.io/collector/internal/obsreportconfig"
+	"go.opentelemetry.io/collector/external/collector/telemetry"
+	"go.opentelemetry.io/collector/external/obsreportconfig"
 	"go.opentelemetry.io/collector/processor/batchprocessor"
 	"go.opentelemetry.io/collector/receiver/kafkareceiver"
-	telemetry2 "go.opentelemetry.io/collector/service/internal/telemetry"
+	telemetry2 "go.opentelemetry.io/collector/service/external/telemetry"
 	"go.opentelemetry.io/collector/translator/conventions"
 )
 

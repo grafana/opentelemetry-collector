@@ -27,7 +27,7 @@ import (
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	idutils "go.opentelemetry.io/collector/internal/idutils"
+	idutils "go.opentelemetry.io/collector/external/idutils"
 	"go.opentelemetry.io/collector/translator/conventions"
 )
 

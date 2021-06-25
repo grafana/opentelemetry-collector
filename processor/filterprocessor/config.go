@@ -16,7 +16,7 @@ package filterprocessor
 
 import (
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/internal/processor/filtermetric"
+	"go.opentelemetry.io/collector/external/processor/filtermetric"
 )
 
 // Config defines configuration for Resource processor.

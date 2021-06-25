@@ -32,8 +32,8 @@ import (
 	"go.opentelemetry.io/collector/config/configgrpc"
 	"go.opentelemetry.io/collector/config/configtls"
 	"go.opentelemetry.io/collector/consumer/pdata"
-	"go.opentelemetry.io/collector/internal/pdatagrpc"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/pdatagrpc"
+	"go.opentelemetry.io/collector/external/testdata"
 )
 
 type mockReceiver struct {

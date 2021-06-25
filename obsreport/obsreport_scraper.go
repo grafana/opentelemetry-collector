@@ -23,8 +23,8 @@ import (
 
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/config/configtelemetry"
-	"go.opentelemetry.io/collector/internal/obsreportconfig"
-	"go.opentelemetry.io/collector/internal/obsreportconfig/obsmetrics"
+	"go.opentelemetry.io/collector/external/obsreportconfig"
+	"go.opentelemetry.io/collector/external/obsreportconfig/obsmetrics"
 	"go.opentelemetry.io/collector/receiver/scrapererror"
 )
 
