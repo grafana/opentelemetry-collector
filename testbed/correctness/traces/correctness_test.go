@@ -59,8 +59,8 @@ func testWithTracingGoldenDataset(
 	processors map[string]string,
 ) {
 	dataProvider := testbed.NewGoldenDataProvider(
-		"../../../internal/goldendataset/testdata/generated_pict_pairs_traces.txt",
-		"../../../internal/goldendataset/testdata/generated_pict_pairs_spans.txt",
+		"../../../external/goldendataset/testdata/generated_pict_pairs_traces.txt",
+		"../../../external/goldendataset/testdata/generated_pict_pairs_spans.txt",
 		"")
 	factories, err := defaultcomponents.Components()
 	require.NoError(t, err, "default components resulted in: %v", err)

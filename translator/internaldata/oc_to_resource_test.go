@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/proto"
 
-	"go.opentelemetry.io/collector/internal/occonventions"
+	"go.opentelemetry.io/collector/external/occonventions"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

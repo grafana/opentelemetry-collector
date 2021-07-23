@@ -20,7 +20,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/extension/extensionhelper"
-	"go.opentelemetry.io/collector/internal/iruntime"
+	"go.opentelemetry.io/collector/external/iruntime"
 )
 
 const (

@@ -19,7 +19,7 @@ import (
 	"regexp"
 	"strings"
 
-	"go.opentelemetry.io/collector/internal/processor/filterhelper"
+	"go.opentelemetry.io/collector/external/processor/filterhelper"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

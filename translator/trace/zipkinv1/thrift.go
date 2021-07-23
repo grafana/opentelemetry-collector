@@ -28,7 +28,7 @@ import (
 	"github.com/jaegertracing/jaeger/thrift-gen/zipkincore"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"go.opentelemetry.io/collector/internal/idutils"
+	"go.opentelemetry.io/collector/external/idutils"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

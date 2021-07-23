@@ -24,7 +24,7 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/receiver/prometheusreceiver/internal"
+	"go.opentelemetry.io/collector/receiver/prometheusreceiver/external"
 )
 
 // pReceiver is the type that provides Prometheus scraper/receiver functionality.

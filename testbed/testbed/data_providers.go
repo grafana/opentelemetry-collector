@@ -25,8 +25,8 @@ import (
 	"go.uber.org/atomic"
 
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/internal/goldendataset"
-	"go.opentelemetry.io/collector/internal/idutils"
+	"go.opentelemetry.io/collector/external/goldendataset"
+	"go.opentelemetry.io/collector/external/idutils"
 	"go.opentelemetry.io/collector/model/otlp"
 	"go.opentelemetry.io/collector/model/pdata"
 )

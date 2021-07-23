@@ -15,9 +15,9 @@
 package pdata
 
 import (
-	"go.opentelemetry.io/collector/model/internal"
-	otlpcollectortrace "go.opentelemetry.io/collector/model/internal/data/protogen/collector/trace/v1"
-	otlptrace "go.opentelemetry.io/collector/model/internal/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/model/external"
+	otlpcollectortrace "go.opentelemetry.io/collector/model/external/data/protogen/collector/trace/v1"
+	otlptrace "go.opentelemetry.io/collector/model/external/data/protogen/trace/v1"
 )
 
 // TracesMarshaler marshals pdata.Traces into bytes.

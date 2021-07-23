@@ -24,7 +24,7 @@ import (
 	"go.opencensus.io/trace"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	"go.opentelemetry.io/collector/internal/occonventions"
+	"go.opentelemetry.io/collector/external/occonventions"
 	"go.opentelemetry.io/collector/model/pdata"
 	"go.opentelemetry.io/collector/translator/conventions"
 	tracetranslator "go.opentelemetry.io/collector/translator/trace"

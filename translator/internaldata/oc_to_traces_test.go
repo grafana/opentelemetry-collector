@@ -26,8 +26,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	"go.opentelemetry.io/collector/internal/occonventions"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/occonventions"
+	"go.opentelemetry.io/collector/external/testdata"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

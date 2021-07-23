@@ -24,8 +24,8 @@ import (
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/config/configtest"
-	"go.opentelemetry.io/collector/internal/processor/filtermetric"
-	fsregexp "go.opentelemetry.io/collector/internal/processor/filterset/regexp"
+	"go.opentelemetry.io/collector/external/processor/filtermetric"
+	fsregexp "go.opentelemetry.io/collector/external/processor/filterset/regexp"
 )
 
 // TestLoadingConfigRegexp tests loading testdata/config_strict.yaml

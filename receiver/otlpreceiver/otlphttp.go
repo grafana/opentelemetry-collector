@@ -26,9 +26,9 @@ import (
 	"google.golang.org/grpc/status"
 
 	"go.opentelemetry.io/collector/model/pdata"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/logs"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/metrics"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/trace"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/logs"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/metrics"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/trace"
 )
 
 var jsonMarshaler = &jsonpb.Marshaler{}

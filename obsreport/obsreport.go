@@ -20,7 +20,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 
-	"go.opentelemetry.io/collector/internal/obsreportconfig/obsmetrics"
+	"go.opentelemetry.io/collector/external/obsreportconfig/obsmetrics"
 )
 
 func buildComponentPrefix(componentPrefix, configType string) string {

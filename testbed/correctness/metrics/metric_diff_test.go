@@ -19,7 +19,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.opentelemetry.io/collector/internal/goldendataset"
+	"go.opentelemetry.io/collector/external/goldendataset"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

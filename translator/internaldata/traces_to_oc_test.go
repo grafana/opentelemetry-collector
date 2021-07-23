@@ -25,9 +25,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	"go.opentelemetry.io/collector/internal/goldendataset"
-	"go.opentelemetry.io/collector/internal/occonventions"
-	"go.opentelemetry.io/collector/internal/testdata"
+	"go.opentelemetry.io/collector/external/goldendataset"
+	"go.opentelemetry.io/collector/external/occonventions"
+	"go.opentelemetry.io/collector/external/testdata"
 	"go.opentelemetry.io/collector/model/pdata"
 	tracetranslator "go.opentelemetry.io/collector/translator/trace"
 )
@@ -355,8 +355,8 @@ func TestInternalToOC(t *testing.T) {
 
 func TestInternalTracesToOCTracesAndBack(t *testing.T) {
 	tds, err := goldendataset.GenerateTraces(
-		"../../internal/goldendataset/testdata/generated_pict_pairs_traces.txt",
-		"../../internal/goldendataset/testdata/generated_pict_pairs_spans.txt")
+		"../../external/goldendataset/testdata/generated_pict_pairs_traces.txt",
+		"../../external/goldendataset/testdata/generated_pict_pairs_spans.txt")
 	assert.NoError(t, err)
 	for _, td := range tds {
 		ocNode, ocResource, ocSpans := ResourceSpansToOC(td.ResourceSpans().At(0))

@@ -22,7 +22,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	otlpcommon "go.opentelemetry.io/collector/model/internal/data/protogen/common/v1"
+	otlpcommon "go.opentelemetry.io/collector/model/external/data/protogen/common/v1"
 )
 
 func TestInstrumentationLibrary_CopyTo(t *testing.T) {

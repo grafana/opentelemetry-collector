@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"strings"
 
-	"go.opentelemetry.io/collector/internal/processor/filterspan"
+	"go.opentelemetry.io/collector/external/processor/filterspan"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

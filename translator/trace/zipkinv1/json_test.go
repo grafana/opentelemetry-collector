@@ -31,7 +31,7 @@ import (
 
 	"go.opentelemetry.io/collector/translator/conventions"
 	tracetranslator "go.opentelemetry.io/collector/translator/trace"
-	"go.opentelemetry.io/collector/translator/trace/internal/zipkin"
+	"go.opentelemetry.io/collector/translator/trace/external/zipkin"
 )
 
 func TestSingleJSONV1BatchToTraces(t *testing.T) {

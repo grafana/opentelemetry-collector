@@ -19,10 +19,10 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.opentelemetry.io/collector/internal/processor/filterconfig"
-	"go.opentelemetry.io/collector/internal/processor/filtermatcher"
-	"go.opentelemetry.io/collector/internal/processor/filtermetric"
-	"go.opentelemetry.io/collector/internal/processor/filterset"
+	"go.opentelemetry.io/collector/external/processor/filterconfig"
+	"go.opentelemetry.io/collector/external/processor/filtermatcher"
+	"go.opentelemetry.io/collector/external/processor/filtermetric"
+	"go.opentelemetry.io/collector/external/processor/filterset"
 	"go.opentelemetry.io/collector/model/pdata"
 	"go.opentelemetry.io/collector/processor/processorhelper"
 )

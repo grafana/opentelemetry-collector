@@ -18,7 +18,7 @@
 package pdata
 
 import (
-	otlpcommon "go.opentelemetry.io/collector/model/internal/data/protogen/common/v1"
+	otlpcommon "go.opentelemetry.io/collector/model/external/data/protogen/common/v1"
 )
 
 // InstrumentationLibrary is a message representing the instrumentation library information.
