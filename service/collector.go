@@ -38,8 +38,8 @@ import (
 	"go.opentelemetry.io/collector/config/experimental/configsource"
 	"go.opentelemetry.io/collector/consumer/consumererror"
 	"go.opentelemetry.io/collector/extension/ballastextension"
-	"go.opentelemetry.io/collector/service/internal"
-	"go.opentelemetry.io/collector/service/internal/telemetrylogs"
+	"go.opentelemetry.io/collector/service/external"
+	"go.opentelemetry.io/collector/service/external/telemetrylogs"
 	"go.opentelemetry.io/collector/service/parserprovider"
 )
 

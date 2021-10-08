@@ -26,7 +26,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer/consumererror"
-	"go.opentelemetry.io/collector/service/internal/builder"
+	"go.opentelemetry.io/collector/service/external/builder"
 )
 
 // service represents the implementation of a component.Host.

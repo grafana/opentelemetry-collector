@@ -20,8 +20,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"go.opentelemetry.io/collector/config/configtelemetry"
-	"go.opentelemetry.io/collector/internal/collector/telemetry"
-	"go.opentelemetry.io/collector/service/internal/telemetrylogs"
+	"go.opentelemetry.io/collector/external/collector/telemetry"
+	"go.opentelemetry.io/collector/service/external/telemetrylogs"
 	"go.opentelemetry.io/collector/service/parserprovider"
 )
 

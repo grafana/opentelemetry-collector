@@ -23,7 +23,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"go.opentelemetry.io/collector/exporter/exporterhelper/internal"
+	"go.opentelemetry.io/collector/exporter/exporterhelper/external"
 	"go.opentelemetry.io/collector/extension/storage"
 )
 

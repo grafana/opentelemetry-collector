@@ -15,7 +15,7 @@
 package pdata
 
 import (
-	"go.opentelemetry.io/collector/model/internal/data"
+	"go.opentelemetry.io/collector/model/external/data"
 )
 
 // SpanID is an alias of OTLP SpanID data type.

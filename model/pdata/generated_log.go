@@ -20,7 +20,7 @@ package pdata
 import (
 	"sort"
 
-	otlplogs "go.opentelemetry.io/collector/model/internal/data/protogen/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/model/external/data/protogen/logs/v1"
 )
 
 // ResourceLogsSlice logically represents a slice of ResourceLogs.

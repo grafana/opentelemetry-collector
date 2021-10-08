@@ -300,7 +300,7 @@ func (gss *GRPCServerSettings) ToServerOption(host component.Host, settings comp
 	// The default values referenced in the GRPC docs are set within the server, so this code doesn't need
 	// to apply them over zero/nil values before passing these as grpc.ServerOptions.
 	// The following shows the server code for applying default grpc.ServerOptions.
-	// https://github.com/grpc/grpc-go/blob/120728e1f775e40a2a764341939b78d666b08260/internal/transport/http2_server.go#L184-L200
+	// https://github.com/grpc/grpc-go/blob/120728e1f775e40a2a764341939b78d666b08260/external/transport/http2_server.go#L184-L200
 	if gss.Keepalive != nil {
 		if gss.Keepalive.ServerParameters != nil {
 			svrParams := gss.Keepalive.ServerParameters
@@ -315,7 +315,7 @@ func (gss *GRPCServerSettings) ToServerOption(host component.Host, settings comp
 		// The default values referenced in the GRPC are set within the server, so this code doesn't need
 		// to apply them over zero/nil values before passing these as grpc.ServerOptions.
 		// The following shows the server code for applying default grpc.ServerOptions.
-		// https://github.com/grpc/grpc-go/blob/120728e1f775e40a2a764341939b78d666b08260/internal/transport/http2_server.go#L202-L205
+		// https://github.com/grpc/grpc-go/blob/120728e1f775e40a2a764341939b78d666b08260/external/transport/http2_server.go#L202-L205
 		if gss.Keepalive.EnforcementPolicy != nil {
 			enfPol := gss.Keepalive.EnforcementPolicy
 			opts = append(opts, grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{

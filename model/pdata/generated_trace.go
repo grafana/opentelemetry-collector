@@ -20,7 +20,7 @@ package pdata
 import (
 	"sort"
 
-	otlptrace "go.opentelemetry.io/collector/model/internal/data/protogen/trace/v1"
+	otlptrace "go.opentelemetry.io/collector/model/external/data/protogen/trace/v1"
 )
 
 // ResourceSpansSlice logically represents a slice of ResourceSpans.
