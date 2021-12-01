@@ -28,7 +28,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/config/confignet"
-	"go.opentelemetry.io/collector/internal/testutil"
+	"go.opentelemetry.io/collector/external/testutil"
 )
 
 type zpagesHost struct {

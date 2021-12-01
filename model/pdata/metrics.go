@@ -15,8 +15,8 @@
 package pdata // import "go.opentelemetry.io/collector/model/pdata"
 
 import (
-	"go.opentelemetry.io/collector/model/internal"
-	otlpmetrics "go.opentelemetry.io/collector/model/internal/data/protogen/metrics/v1"
+	"go.opentelemetry.io/collector/model/external"
+	otlpmetrics "go.opentelemetry.io/collector/model/external/data/protogen/metrics/v1"
 )
 
 // MetricsMarshaler marshals pdata.Metrics into bytes.

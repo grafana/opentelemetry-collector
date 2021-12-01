@@ -15,8 +15,8 @@
 package pdata // import "go.opentelemetry.io/collector/model/pdata"
 
 import (
-	"go.opentelemetry.io/collector/model/internal"
-	otlplogs "go.opentelemetry.io/collector/model/internal/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/model/external"
+	otlplogs "go.opentelemetry.io/collector/model/external/data/protogen/logs/v1"
 )
 
 // LogsMarshaler marshals pdata.Logs into bytes.

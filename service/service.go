@@ -23,8 +23,8 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/service/internal/builder"
-	"go.opentelemetry.io/collector/service/internal/extensions"
+	"go.opentelemetry.io/collector/service/external/builder"
+	"go.opentelemetry.io/collector/service/external/extensions"
 )
 
 // service represents the implementation of a component.Host.
@@ -58,7 +58,7 @@ func newService(set *svcSettings) (*service, error) {
 
 	var err error
 	if srv.builtExtensions, err = extensions.Build(srv.telemetry, srv.buildInfo, srv.config, srv.factories.Extensions); err != nil {
-		return nil, fmt.Errorf("cannot build extensions: %w", err)
+		return nil, fmt.Errorf("cannot build ext/**/ensions: %w", err)
 	}
 
 	// Pipeline is built backwards, starting from exporters, so that we create objects

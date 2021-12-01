@@ -20,7 +20,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/component/componenterror"
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/internal/internalinterface"
+	"go.opentelemetry.io/collector/external/internalinterface"
 )
 
 // FactoryOption apply changes to ExporterOptions.

@@ -19,8 +19,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.opentelemetry.io/collector/model/internal"
-	otlplogs "go.opentelemetry.io/collector/model/internal/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/model/external"
+	otlplogs "go.opentelemetry.io/collector/model/external/data/protogen/logs/v1"
 )
 
 func TestLogRecordCount(t *testing.T) {

@@ -21,7 +21,7 @@ import (
 	"go.opentelemetry.io/collector/component/componenthelper"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/internal/internalinterface"
+	"go.opentelemetry.io/collector/external/internalinterface"
 )
 
 // NewNopReceiverCreateSettings returns a new nop settings for Create*Receiver functions.

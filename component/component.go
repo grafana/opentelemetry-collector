@@ -18,7 +18,7 @@ import (
 	"context"
 
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/internal/internalinterface"
+	"go.opentelemetry.io/collector/external/internalinterface"
 )
 
 // Component is either a receiver, exporter, processor, or an extension.

@@ -20,7 +20,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/component/componenthelper"
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/internal/internalinterface"
+	"go.opentelemetry.io/collector/external/internalinterface"
 )
 
 // NewNopExtensionCreateSettings returns a new nop settings for Create*Extension functions.
