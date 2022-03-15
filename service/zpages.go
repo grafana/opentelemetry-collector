@@ -22,9 +22,9 @@ import (
 	otelzpages "go.opentelemetry.io/contrib/zpages"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/internal/version"
+	"go.opentelemetry.io/collector/external/version"
 	"go.opentelemetry.io/collector/service/featuregate"
-	"go.opentelemetry.io/collector/service/internal/zpages"
+	"go.opentelemetry.io/collector/service/external/zpages"
 )
 
 const (

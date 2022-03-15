@@ -27,7 +27,7 @@ import (
 	"golang.org/x/sys/windows/svc"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/internal/testcomponents"
+	"go.opentelemetry.io/collector/external/testcomponents"
 )
 
 func TestWindowsService_Execute(t *testing.T) {

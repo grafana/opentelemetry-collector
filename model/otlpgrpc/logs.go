@@ -21,9 +21,9 @@ import (
 	"github.com/gogo/protobuf/jsonpb"
 	"google.golang.org/grpc"
 
-	"go.opentelemetry.io/collector/model/internal"
-	otlpcollectorlog "go.opentelemetry.io/collector/model/internal/data/protogen/collector/logs/v1"
-	otlplogs "go.opentelemetry.io/collector/model/internal/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/model/external"
+	otlpcollectorlog "go.opentelemetry.io/collector/model/external/data/protogen/collector/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/model/external/data/protogen/logs/v1"
 	"go.opentelemetry.io/collector/model/pdata"
 )
 

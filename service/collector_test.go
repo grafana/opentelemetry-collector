@@ -36,8 +36,8 @@ import (
 	"go.uber.org/zap/zapcore"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/internal/testcomponents"
-	"go.opentelemetry.io/collector/internal/testutil"
+	"go.opentelemetry.io/collector/external/testcomponents"
+	"go.opentelemetry.io/collector/external/testutil"
 	"go.opentelemetry.io/collector/service/featuregate"
 )
 

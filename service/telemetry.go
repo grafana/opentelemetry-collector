@@ -34,12 +34,12 @@ import (
 	"go.uber.org/zap"
 
 	"go.opentelemetry.io/collector/config/configtelemetry"
-	"go.opentelemetry.io/collector/internal/obsreportconfig"
-	"go.opentelemetry.io/collector/internal/version"
+	"go.opentelemetry.io/collector/external/obsreportconfig"
+	"go.opentelemetry.io/collector/external/version"
 	semconv "go.opentelemetry.io/collector/model/semconv/v1.5.0"
 	"go.opentelemetry.io/collector/processor/batchprocessor"
 	"go.opentelemetry.io/collector/service/featuregate"
-	telemetry2 "go.opentelemetry.io/collector/service/internal/telemetry"
+	telemetry2 "go.opentelemetry.io/collector/service/external/telemetry"
 )
 
 // collectorTelemetry is collector's own telemetry.

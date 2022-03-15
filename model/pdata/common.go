@@ -25,7 +25,7 @@ import (
 	"sort"
 	"strconv"
 
-	otlpcommon "go.opentelemetry.io/collector/model/internal/data/protogen/common/v1"
+	otlpcommon "go.opentelemetry.io/collector/model/external/data/protogen/common/v1"
 )
 
 // AttributeValueType specifies the type of AttributeValue.
