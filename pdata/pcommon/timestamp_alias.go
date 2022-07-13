@@ -14,7 +14,7 @@
 
 package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 
-import "go.opentelemetry.io/collector/pdata/internal"
+import "go.opentelemetry.io/collector/pdata/external"
 
 // Timestamp is a time specified as UNIX Epoch time in nanoseconds since
 // 1970-01-01 00:00:00 +0000 UTC.

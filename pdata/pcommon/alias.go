@@ -17,7 +17,7 @@ package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 // This file contains aliases to data structures that are common for all
 // signal types, such as timestamps, attributes, etc.
 
-import "go.opentelemetry.io/collector/pdata/internal"
+import "go.opentelemetry.io/collector/pdata/external"
 
 // ValueType specifies the type of Value.
 type ValueType = internal.ValueType

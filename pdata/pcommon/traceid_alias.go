@@ -14,7 +14,7 @@
 
 package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 
-import "go.opentelemetry.io/collector/pdata/internal"
+import "go.opentelemetry.io/collector/pdata/external"
 
 // TraceID is a trace identifier.
 type TraceID = internal.TraceID

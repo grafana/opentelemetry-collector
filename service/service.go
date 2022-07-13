@@ -24,11 +24,11 @@ import (
 	"go.uber.org/zap"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/service/internal"
-	"go.opentelemetry.io/collector/service/internal/extensions"
-	"go.opentelemetry.io/collector/service/internal/pipelines"
-	"go.opentelemetry.io/collector/service/internal/telemetry"
-	"go.opentelemetry.io/collector/service/internal/telemetrylogs"
+	"go.opentelemetry.io/collector/service/external"
+	"go.opentelemetry.io/collector/service/external/extensions"
+	"go.opentelemetry.io/collector/service/external/pipelines"
+	"go.opentelemetry.io/collector/service/external/telemetry"
+	"go.opentelemetry.io/collector/service/external/telemetrylogs"
 )
 
 // service represents the implementation of a component.Host.

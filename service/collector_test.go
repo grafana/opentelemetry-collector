@@ -37,7 +37,7 @@ import (
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/extension/zpagesextension"
-	"go.opentelemetry.io/collector/internal/testutil"
+	"go.opentelemetry.io/collector/external/testutil"
 	"go.opentelemetry.io/collector/service/featuregate"
 )
 

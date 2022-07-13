@@ -14,7 +14,7 @@
 
 package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 
-import "go.opentelemetry.io/collector/pdata/internal"
+import "go.opentelemetry.io/collector/pdata/external"
 
 // SpanID is span identifier.
 type SpanID = internal.SpanID

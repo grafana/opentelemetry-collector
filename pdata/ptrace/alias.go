@@ -14,7 +14,7 @@
 
 package ptrace // import "go.opentelemetry.io/collector/pdata/ptrace"
 
-import "go.opentelemetry.io/collector/pdata/internal"
+import "go.opentelemetry.io/collector/pdata/external"
 
 // This file contains aliases for trace data structures.
 

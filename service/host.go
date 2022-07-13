@@ -17,8 +17,8 @@ package service // import "go.opentelemetry.io/collector/service"
 import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
-	"go.opentelemetry.io/collector/service/internal/extensions"
-	"go.opentelemetry.io/collector/service/internal/pipelines"
+	"go.opentelemetry.io/collector/service/external/extensions"
+	"go.opentelemetry.io/collector/service/external/pipelines"
 )
 
 var _ component.Host = (*serviceHost)(nil)

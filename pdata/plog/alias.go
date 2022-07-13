@@ -16,7 +16,7 @@ package plog // import "go.opentelemetry.io/collector/pdata/plog"
 
 // This file contains aliases for logs data structures.
 
-import "go.opentelemetry.io/collector/pdata/internal"
+import "go.opentelemetry.io/collector/pdata/external"
 
 // Logs is the top-level struct that is propagated through the logs pipeline.
 // Use NewLogs to create new instance, zero-initialized instance is not valid for use.

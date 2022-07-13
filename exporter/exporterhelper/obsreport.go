@@ -21,7 +21,7 @@ import (
 	"go.opencensus.io/metric/metricdata"
 	"go.opencensus.io/metric/metricproducer"
 
-	"go.opentelemetry.io/collector/internal/obsreportconfig/obsmetrics"
+	"go.opentelemetry.io/collector/external/obsreportconfig/obsmetrics"
 	"go.opentelemetry.io/collector/obsreport"
 )
 

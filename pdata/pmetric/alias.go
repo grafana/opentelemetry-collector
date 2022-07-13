@@ -14,7 +14,7 @@
 
 package pmetric // import "go.opentelemetry.io/collector/pdata/pmetric"
 
-import "go.opentelemetry.io/collector/pdata/internal" // This file contains aliases for metric data structures.
+import "go.opentelemetry.io/collector/pdata/external" // This file contains aliases for metric data structures.
 
 // Metrics is the top-level struct that is propagated through the metrics pipeline.
 // Use NewMetrics to create new instance, zero-initialized instance is not valid for use.
