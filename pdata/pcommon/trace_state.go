@@ -15,7 +15,7 @@
 package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 
 import (
-	"go.opentelemetry.io/collector/pdata/internal"
+	"go.opentelemetry.io/collector/pdata/external"
 )
 
 // TraceState represents the trace state from the w3c-trace-context.

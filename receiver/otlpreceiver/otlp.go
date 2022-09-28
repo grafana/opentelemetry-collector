@@ -31,9 +31,9 @@ import (
 	"go.opentelemetry.io/collector/pdata/plog/plogotlp"
 	"go.opentelemetry.io/collector/pdata/pmetric/pmetricotlp"
 	"go.opentelemetry.io/collector/pdata/ptrace/ptraceotlp"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/logs"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/metrics"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver/internal/trace"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/logs"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/metrics"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver/external/trace"
 )
 
 // otlpReceiver is the type that exposes Trace and Metrics reception.

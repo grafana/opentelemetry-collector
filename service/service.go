@@ -27,10 +27,10 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configtelemetry"
 	"go.opentelemetry.io/collector/service/extensions"
-	"go.opentelemetry.io/collector/service/internal"
-	"go.opentelemetry.io/collector/service/internal/pipelines"
-	"go.opentelemetry.io/collector/service/internal/telemetry"
-	"go.opentelemetry.io/collector/service/internal/telemetrylogs"
+	"go.opentelemetry.io/collector/service/external"
+	"go.opentelemetry.io/collector/service/external/pipelines"
+	"go.opentelemetry.io/collector/service/external/telemetry"
+	"go.opentelemetry.io/collector/service/external/telemetrylogs"
 )
 
 // service represents the implementation of a component.Host.

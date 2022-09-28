@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package configgrpc // import "go.opentelemetry.io/collector/internal/middleware"
+package configgrpc // import "go.opentelemetry.io/collector/external/middleware"
 
 import (
 	"context"
