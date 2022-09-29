@@ -21,7 +21,7 @@ import (
 	"github.com/gogo/protobuf/jsonpb"
 	"github.com/stretchr/testify/assert"
 
-	otlplogs "go.opentelemetry.io/collector/pdata/internal/data/protogen/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/pdata/external/data/protogen/logs/v1"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 )
 

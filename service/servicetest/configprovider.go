@@ -18,7 +18,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/confmap/confmaptest"
-	"go.opentelemetry.io/collector/service/internal/configunmarshaler"
+	"go.opentelemetry.io/collector/service/external/configunmarshaler"
 )
 
 // LoadConfig loads a config.Config  from file, and does NOT validate the configuration.

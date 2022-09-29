@@ -19,9 +19,9 @@ import (
 
 	"github.com/gogo/protobuf/jsonpb"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlptrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/trace/v1"
-	"go.opentelemetry.io/collector/pdata/ptrace/internal/ptracejson"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlptrace "go.opentelemetry.io/collector/pdata/external/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/pdata/ptrace/external/ptracejson"
 )
 
 // NewJSONMarshaler returns a model.Marshaler. Marshals to OTLP json bytes.

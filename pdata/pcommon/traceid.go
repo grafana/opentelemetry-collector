@@ -17,7 +17,7 @@ package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 import (
 	"encoding/hex"
 
-	"go.opentelemetry.io/collector/pdata/internal/data"
+	"go.opentelemetry.io/collector/pdata/external/data"
 )
 
 var emptyTraceID = TraceID([16]byte{})

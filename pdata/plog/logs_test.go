@@ -22,9 +22,9 @@ import (
 	goproto "google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcollectorlog "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/logs/v1"
-	otlplogs "go.opentelemetry.io/collector/pdata/internal/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcollectorlog "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/pdata/external/data/protogen/logs/v1"
 )
 
 func TestLogRecordCount(t *testing.T) {
