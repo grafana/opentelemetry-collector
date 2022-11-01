@@ -19,8 +19,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	otlpcollectormetrics "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/metrics/v1"
-	"go.opentelemetry.io/collector/pdata/internal/otlp"
+	otlpcollectormetrics "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/metrics/v1"
+	"go.opentelemetry.io/collector/pdata/external/otlp"
 )
 
 // GRPCClient is the client API for OTLP-GRPC Metrics service.

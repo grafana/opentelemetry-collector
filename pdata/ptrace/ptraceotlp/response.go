@@ -16,9 +16,9 @@ package ptraceotlp // import "go.opentelemetry.io/collector/pdata/ptrace/ptraceo
 import (
 	"bytes"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcollectortrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/trace/v1"
-	"go.opentelemetry.io/collector/pdata/ptrace/internal/ptracejson"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcollectortrace "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/trace/v1"
+	"go.opentelemetry.io/collector/pdata/ptrace/external/ptracejson"
 )
 
 // ExportResponse represents the response for gRPC/HTTP client/server.

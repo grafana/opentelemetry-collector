@@ -15,8 +15,8 @@
 package pmetric // import "go.opentelemetry.io/collector/pdata/pmetric"
 
 import (
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpmetrics "go.opentelemetry.io/collector/pdata/internal/data/protogen/metrics/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpmetrics "go.opentelemetry.io/collector/pdata/external/data/protogen/metrics/v1"
 )
 
 // Deprecated: [v0.63.0] use &ProtoMarshaler{}

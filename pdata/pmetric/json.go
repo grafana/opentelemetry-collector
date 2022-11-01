@@ -17,9 +17,9 @@ package pmetric // import "go.opentelemetry.io/collector/pdata/pmetric"
 import (
 	"bytes"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpmetrics "go.opentelemetry.io/collector/pdata/internal/data/protogen/metrics/v1"
-	"go.opentelemetry.io/collector/pdata/pmetric/internal/pmetricjson"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpmetrics "go.opentelemetry.io/collector/pdata/external/data/protogen/metrics/v1"
+	"go.opentelemetry.io/collector/pdata/pmetric/external/pmetricjson"
 )
 
 var delegate = pmetricjson.JSONMarshaler

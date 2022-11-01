@@ -15,9 +15,9 @@
 package ptrace // import "go.opentelemetry.io/collector/pdata/ptrace"
 
 import (
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcollectortrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/trace/v1"
-	otlptrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcollectortrace "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/trace/v1"
+	otlptrace "go.opentelemetry.io/collector/pdata/external/data/protogen/trace/v1"
 )
 
 // Traces is the top-level struct that is propagated through the traces pipeline.

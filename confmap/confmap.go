@@ -24,7 +24,7 @@ import (
 	"github.com/knadh/koanf/providers/confmap"
 	"github.com/mitchellh/mapstructure"
 
-	encoder "go.opentelemetry.io/collector/confmap/internal/mapstructure"
+	encoder "go.opentelemetry.io/collector/confmap/external/mapstructure"
 )
 
 const (

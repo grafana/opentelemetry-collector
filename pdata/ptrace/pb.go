@@ -15,8 +15,8 @@
 package ptrace // import "go.opentelemetry.io/collector/pdata/ptrace"
 
 import (
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlptrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlptrace "go.opentelemetry.io/collector/pdata/external/data/protogen/trace/v1"
 )
 
 // Deprecated: [v0.63.0] use &ProtoMarshaler{}

@@ -38,8 +38,8 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/extension/zpagesextension"
 	"go.opentelemetry.io/collector/featuregate"
-	"go.opentelemetry.io/collector/internal/obsreportconfig"
-	"go.opentelemetry.io/collector/internal/testutil"
+	"go.opentelemetry.io/collector/external/obsreportconfig"
+	"go.opentelemetry.io/collector/external/testutil"
 )
 
 func TestStateString(t *testing.T) {
