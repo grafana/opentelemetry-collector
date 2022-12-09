@@ -28,8 +28,8 @@ import (
 
 	"go.uber.org/multierr"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcommon "go.opentelemetry.io/collector/pdata/internal/data/protogen/common/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcommon "go.opentelemetry.io/collector/pdata/external/data/protogen/common/v1"
 )
 
 // ValueType specifies the type of Value.

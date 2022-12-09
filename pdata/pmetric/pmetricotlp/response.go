@@ -16,9 +16,9 @@ package pmetricotlp // import "go.opentelemetry.io/collector/pdata/pmetric/pmetr
 import (
 	"bytes"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcollectormetrics "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/metrics/v1"
-	"go.opentelemetry.io/collector/pdata/pmetric/internal/pmetricjson"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcollectormetrics "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/metrics/v1"
+	"go.opentelemetry.io/collector/pdata/pmetric/external/pmetricjson"
 )
 
 // ExportResponse represents the response for gRPC/HTTP client/server.

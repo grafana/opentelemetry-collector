@@ -17,9 +17,9 @@ package ptrace // import "go.opentelemetry.io/collector/pdata/ptrace"
 import (
 	"bytes"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlptrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/trace/v1"
-	"go.opentelemetry.io/collector/pdata/ptrace/internal/ptracejson"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlptrace "go.opentelemetry.io/collector/pdata/external/data/protogen/trace/v1"
+	"go.opentelemetry.io/collector/pdata/ptrace/external/ptracejson"
 )
 
 var delegate = ptracejson.JSONMarshaler

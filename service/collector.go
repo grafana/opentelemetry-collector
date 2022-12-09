@@ -30,7 +30,7 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
-	"go.opentelemetry.io/collector/service/internal/grpclog"
+	"go.opentelemetry.io/collector/service/external/grpclog"
 )
 
 // State defines Collector's state.

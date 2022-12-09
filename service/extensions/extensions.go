@@ -25,8 +25,8 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/extension"
-	"go.opentelemetry.io/collector/service/internal/components"
-	"go.opentelemetry.io/collector/service/internal/zpages"
+	"go.opentelemetry.io/collector/service/external/components"
+	"go.opentelemetry.io/collector/service/external/zpages"
 )
 
 const zExtensionName = "zextensionname"

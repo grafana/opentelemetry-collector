@@ -17,7 +17,7 @@ package main
 import (
 	"github.com/spf13/cobra"
 
-	"go.opentelemetry.io/collector/cmd/builder/internal"
+	"go.opentelemetry.io/collector/cmd/builder/external"
 )
 
 func main() {

@@ -26,7 +26,7 @@ import (
 	"go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/config/confignet"
 	"go.opentelemetry.io/collector/extension/extensiontest"
-	"go.opentelemetry.io/collector/internal/testutil"
+	"go.opentelemetry.io/collector/external/testutil"
 )
 
 func TestFactory_CreateDefaultConfig(t *testing.T) {

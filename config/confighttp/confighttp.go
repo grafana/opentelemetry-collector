@@ -30,7 +30,7 @@ import (
 	"go.opentelemetry.io/collector/config/configauth"
 	"go.opentelemetry.io/collector/config/configcompression"
 	"go.opentelemetry.io/collector/config/configtls"
-	"go.opentelemetry.io/collector/config/internal"
+	"go.opentelemetry.io/collector/config/external"
 	"go.opentelemetry.io/collector/extension/auth"
 )
 

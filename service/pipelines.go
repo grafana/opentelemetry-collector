@@ -27,10 +27,10 @@ import (
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/receiver"
-	"go.opentelemetry.io/collector/service/internal/capabilityconsumer"
-	"go.opentelemetry.io/collector/service/internal/components"
-	"go.opentelemetry.io/collector/service/internal/fanoutconsumer"
-	"go.opentelemetry.io/collector/service/internal/zpages"
+	"go.opentelemetry.io/collector/service/external/capabilityconsumer"
+	"go.opentelemetry.io/collector/service/external/components"
+	"go.opentelemetry.io/collector/service/external/fanoutconsumer"
+	"go.opentelemetry.io/collector/service/external/zpages"
 )
 
 const (
