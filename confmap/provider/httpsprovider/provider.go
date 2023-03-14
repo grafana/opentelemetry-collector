@@ -16,7 +16,7 @@ package httpsprovider // import "go.opentelemetry.io/collector/confmap/provider/
 
 import (
 	"go.opentelemetry.io/collector/confmap"
-	"go.opentelemetry.io/collector/confmap/provider/internal/configurablehttpprovider"
+	"go.opentelemetry.io/collector/confmap/provider/external/configurablehttpprovider"
 )
 
 // New returns a new confmap.Provider that reads the configuration from a https server.

@@ -21,7 +21,7 @@ import (
 	"strings"
 
 	"go.opentelemetry.io/collector/confmap"
-	"go.opentelemetry.io/collector/confmap/provider/internal"
+	"go.opentelemetry.io/collector/confmap/provider/external"
 )
 
 const schemeName = "env"

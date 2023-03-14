@@ -27,8 +27,8 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/service/internal/capabilityconsumer"
-	"go.opentelemetry.io/collector/service/internal/fanoutconsumer"
+	"go.opentelemetry.io/collector/service/external/capabilityconsumer"
+	"go.opentelemetry.io/collector/service/external/fanoutconsumer"
 )
 
 type pipelinesGraph struct {

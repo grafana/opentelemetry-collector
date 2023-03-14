@@ -15,7 +15,7 @@
 package plog // import "go.opentelemetry.io/collector/pdata/plog"
 
 import (
-	otlplogs "go.opentelemetry.io/collector/pdata/internal/data/protogen/logs/v1"
+	otlplogs "go.opentelemetry.io/collector/pdata/external/data/protogen/logs/v1"
 )
 
 // SeverityNumber represents severity number of a log record.

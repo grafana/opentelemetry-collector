@@ -15,8 +15,8 @@
 package pmetric // import "go.opentelemetry.io/collector/pdata/pmetric"
 
 import (
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcollectormetrics "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/metrics/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcollectormetrics "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/metrics/v1"
 )
 
 // Metrics is the top-level struct that is propagated through the metrics pipeline.

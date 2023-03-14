@@ -17,8 +17,8 @@ package plogotlp // import "go.opentelemetry.io/collector/pdata/plog/plogotlp"
 import (
 	"bytes"
 
-	otlpcollectorlog "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/logs/v1"
-	"go.opentelemetry.io/collector/pdata/plog/internal/plogjson"
+	otlpcollectorlog "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/logs/v1"
+	"go.opentelemetry.io/collector/pdata/plog/external/plogjson"
 )
 
 // ExportResponse represents the response for gRPC/HTTP client/server.

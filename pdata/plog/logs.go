@@ -15,8 +15,8 @@
 package plog // import "go.opentelemetry.io/collector/pdata/plog"
 
 import (
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcollectorlog "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/logs/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcollectorlog "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/logs/v1"
 )
 
 // Logs is the top-level struct that is propagated through the logs pipeline.

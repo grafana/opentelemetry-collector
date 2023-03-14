@@ -17,8 +17,8 @@ package pcommon // import "go.opentelemetry.io/collector/pdata/pcommon"
 import (
 	"go.uber.org/multierr"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlpcommon "go.opentelemetry.io/collector/pdata/internal/data/protogen/common/v1"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlpcommon "go.opentelemetry.io/collector/pdata/external/data/protogen/common/v1"
 )
 
 // Map stores a map of string keys to elements of Value type.

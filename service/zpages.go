@@ -21,8 +21,8 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
-	"go.opentelemetry.io/collector/service/internal/runtimeinfo"
-	"go.opentelemetry.io/collector/service/internal/zpages"
+	"go.opentelemetry.io/collector/service/external/runtimeinfo"
+	"go.opentelemetry.io/collector/service/external/zpages"
 )
 
 const (

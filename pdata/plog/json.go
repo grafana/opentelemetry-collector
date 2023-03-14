@@ -17,9 +17,9 @@ package plog // import "go.opentelemetry.io/collector/pdata/plog"
 import (
 	"bytes"
 
-	"go.opentelemetry.io/collector/pdata/internal"
-	otlplogs "go.opentelemetry.io/collector/pdata/internal/data/protogen/logs/v1"
-	"go.opentelemetry.io/collector/pdata/plog/internal/plogjson"
+	"go.opentelemetry.io/collector/pdata/external"
+	otlplogs "go.opentelemetry.io/collector/pdata/external/data/protogen/logs/v1"
+	"go.opentelemetry.io/collector/pdata/plog/external/plogjson"
 )
 
 var delegate = plogjson.JSONMarshaler

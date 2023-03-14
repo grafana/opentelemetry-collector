@@ -15,7 +15,7 @@
 package ptrace // import "go.opentelemetry.io/collector/pdata/ptrace"
 
 import (
-	otlptrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/trace/v1"
+	otlptrace "go.opentelemetry.io/collector/pdata/external/data/protogen/trace/v1"
 )
 
 // SpanKind is the type of span. Can be used to specify additional relationships between spans

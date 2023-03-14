@@ -21,8 +21,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	otlpcollectortrace "go.opentelemetry.io/collector/pdata/internal/data/protogen/collector/trace/v1"
-	"go.opentelemetry.io/collector/pdata/internal/otlp"
+	otlpcollectortrace "go.opentelemetry.io/collector/pdata/external/data/protogen/collector/trace/v1"
+	"go.opentelemetry.io/collector/pdata/external/otlp"
 )
 
 // GRPCClient is the client API for OTLP-GRPC Traces service.

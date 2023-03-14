@@ -24,8 +24,8 @@ import (
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/processor"
 	"go.opentelemetry.io/collector/receiver"
-	"go.opentelemetry.io/collector/service/internal/components"
-	"go.opentelemetry.io/collector/service/internal/fanoutconsumer"
+	"go.opentelemetry.io/collector/service/external/components"
+	"go.opentelemetry.io/collector/service/external/fanoutconsumer"
 )
 
 // baseConsumer redeclared here since not public in consumer package. May consider to make that public.

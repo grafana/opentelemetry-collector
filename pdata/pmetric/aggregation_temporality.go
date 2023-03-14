@@ -15,7 +15,7 @@
 package pmetric // import "go.opentelemetry.io/collector/pdata/pmetric"
 
 import (
-	otlpmetrics "go.opentelemetry.io/collector/pdata/internal/data/protogen/metrics/v1"
+	otlpmetrics "go.opentelemetry.io/collector/pdata/external/data/protogen/metrics/v1"
 )
 
 // AggregationTemporality defines how a metric aggregator reports aggregated values.
