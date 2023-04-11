@@ -292,7 +292,7 @@ func (c TLSSetting) loadCertificate() (tls.Certificate, error) {
 
 // LoadTLSConfig loads the TLS configuration.
 func (c TLSClientSetting) LoadTLSConfig() (*tls.Config, error) {
-	if c.Insecure && c.CAFile == "" {
+	if c.Insecure && c.CAFile == "" && len(c.CAPem) == 0 {
 		return nil, nil
 	}
 
