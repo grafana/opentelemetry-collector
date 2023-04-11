@@ -17,7 +17,9 @@ package configtls
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -134,6 +136,99 @@ func TestOptionsToConfig(t *testing.T) {
 			},
 			expectError: "invalid TLS max_",
 		},
+
+		{
+			name:    "should load custom CA PEM",
+			options: TLSSetting{CAPem: readFilePanics("testdata/ca-1.crt")},
+		},
+
+		{
+			name:        "should fail with invalid CA PEM",
+			options:     TLSSetting{CAPem: readFilePanics("testdata/testCA-bad.txt")},
+			expectError: "failed to parse CA",
+		},
+		{
+			name: "should fail CA file and PEM both provided",
+			options: TLSSetting{
+				CAFile: "testdata/ca-1.crt",
+				CAPem:  readFilePanics("testdata/ca-1.crt"),
+			},
+			expectError: "failed to load CA CertPool: CA File and PEM cannot both be provided",
+		},
+		{
+			name: "should fail Cert file and PEM both provided",
+			options: TLSSetting{
+				CertFile: "testdata/server-1.crt",
+				CertPem:  readFilePanics("testdata/server-1.crt"),
+			},
+			expectError: "for auth via TLS, either both certificate and key must be supplied, or neither",
+		},
+		{
+			name: "should fail Cert file and Key PEM provided",
+			options: TLSSetting{
+				CertFile: "testdata/server-1.crt",
+				KeyPem:   readFilePanics("testdata/server-1.key"),
+			},
+			expectError: "failed to load TLS cert file and key PEM: both must be provided as a file or both as a PEM",
+		},
+		{
+			name: "should fail Cert PEM and Key File provided",
+			options: TLSSetting{
+				CertPem: readFilePanics("testdata/server-1.crt"),
+				KeyFile: "testdata/server-1.key",
+			},
+			expectError: "failed to load TLS cert PEM and key file: both must be provided as a file or both as a PEM",
+		},
+		{
+			name: "should fail Key file and PEM both provided",
+			options: TLSSetting{
+				KeyFile: "testdata/ca-1.crt",
+				KeyPem:  readFilePanics("testdata/server-1.key"),
+			},
+			expectError: "failed to load TLS cert and key: for auth via TLS, either both certificate and key must be supplied, or neither",
+		},
+		{
+			name: "should fail to load valid TLS settings with bad Cert PEM",
+			options: TLSSetting{
+				CAPem:   readFilePanics("testdata/ca-1.crt"),
+				CertPem: readFilePanics("testdata/testCA-bad.txt"),
+				KeyPem:  readFilePanics("testdata/server-1.key"),
+			},
+			expectError: "failed to load TLS cert and key PEMs",
+		},
+		{
+			name: "should fail to load valid TLS settings with bad Key PEM",
+			options: TLSSetting{
+				CAPem:   readFilePanics("testdata/ca-1.crt"),
+				CertPem: readFilePanics("testdata/server-1.crt"),
+				KeyPem:  readFilePanics("testdata/testCA-bad.txt"),
+			},
+			expectError: "failed to load TLS cert and key PEMs",
+		},
+		{
+			name: "should load valid TLS settings with PEMs",
+			options: TLSSetting{
+				CAPem:   readFilePanics("testdata/ca-1.crt"),
+				CertPem: readFilePanics("testdata/server-1.crt"),
+				KeyPem:  readFilePanics("testdata/server-1.key"),
+			},
+		},
+		{
+			name: "should fail with missing TLS KeyPem",
+			options: TLSSetting{
+				CAPem:   readFilePanics("testdata/ca-1.crt"),
+				CertPem: readFilePanics("testdata/server-1.crt"),
+			},
+			expectError: "both certificate and key must be supplied",
+		},
+		{
+			name: "should fail with missing TLS Cert PEM",
+			options: TLSSetting{
+				CAPem:  readFilePanics("testdata/ca-1.crt"),
+				KeyPem: readFilePanics("testdata/server-1.key"),
+			},
+			expectError: "both certificate and key must be supplied",
+		},
 	}
 
 	for _, test := range tests {
@@ -148,6 +243,15 @@ func TestOptionsToConfig(t *testing.T) {
 			}
 		})
 	}
+}
+
+func readFilePanics(filePath string) []byte {
+	fileContents, err := ioutil.ReadFile(filepath.Clean(filePath))
+	if err != nil {
+		panic(fmt.Sprintf("failed to read file %s: %v", filePath, err))
+	}
+
+	return fileContents
 }
 
 func TestLoadTLSClientConfigError(t *testing.T) {

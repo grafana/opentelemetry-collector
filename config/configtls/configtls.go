@@ -17,9 +17,8 @@ package configtls // import "go.opentelemetry.io/collector/config/configtls"
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"errors"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"path/filepath"
 	"sync"
 	"time"
@@ -41,11 +40,20 @@ type TLSSetting struct {
 	// (optional)
 	CAFile string `mapstructure:"ca_file"`
 
+	// In memory PEM encoded cert. (optional)
+	CAPem []byte `mapstructure:"ca_pem"`
+
 	// Path to the TLS cert to use for TLS required connections. (optional)
 	CertFile string `mapstructure:"cert_file"`
 
+	// In memory PEM encoded TLS cert to use for TLS required connections. (optional)
+	CertPem []byte `mapstructure:"cert_pem"`
+
 	// Path to the TLS key to use for TLS required connections. (optional)
 	KeyFile string `mapstructure:"key_file"`
+
+	// In memory PEM encoded TLS key to use for TLS required connections. (optional)
+	KeyPem []byte `mapstructure:"key_pem"`
 
 	// MinVersion sets the minimum TLS version that is acceptable.
 	// If not set, TLS 1.2 will be used. (optional)
@@ -107,22 +115,22 @@ type certReloader struct {
 	CertFile string
 	// Path to the TLS key
 	KeyFile string
-	// ReloadInterval specifies the duration after which the certificate will be reloaded
-	// If not set, it will never be reloaded (optional)
+	// ReloadInterval specifies the duration after which the certificate will be reloaded.
+	// If not set, it will never be reloaded. If CertFile isn't set, it will never be reloaded. (optional)
 	ReloadInterval time.Duration
 	nextReload     time.Time
 	cert           *tls.Certificate
 	lock           sync.RWMutex
 }
 
-func newCertReloader(certFile, keyFile string, reloadInterval time.Duration) (*certReloader, error) {
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+func (c TLSSetting) newCertReloader(reloadInterval time.Duration) (*certReloader, error) {
+	cert, err := c.loadCertificate()
 	if err != nil {
 		return nil, err
 	}
 	return &certReloader{
-		CertFile:       certFile,
-		KeyFile:        keyFile,
+		CertFile:       c.CertFile,
+		KeyFile:        c.KeyFile,
 		ReloadInterval: reloadInterval,
 		nextReload:     time.Now().Add(reloadInterval),
 		cert:           &cert,
@@ -135,7 +143,7 @@ func (r *certReloader) GetCertificate() (*tls.Certificate, error) {
 	// If a reload is in progress this will block and we will skip reloading in the current
 	// call once we can continue
 	r.lock.RLock()
-	if r.ReloadInterval != 0 && r.nextReload.Before(now) {
+	if r.ReloadInterval != 0 && r.nextReload.Before(now) && r.CertFile != "" {
 		// Need to release the read lock, otherwise we deadlock
 		r.lock.RUnlock()
 		r.lock.Lock()
@@ -152,36 +160,29 @@ func (r *certReloader) GetCertificate() (*tls.Certificate, error) {
 	return r.cert, nil
 }
 
-// LoadTLSConfig loads TLS certificates and returns a tls.Config.
+// loadTLSConfig loads TLS certificates and returns a tls.Config.
 // This will set the RootCAs and Certificates of a tls.Config.
 func (c TLSSetting) loadTLSConfig() (*tls.Config, error) {
-	// There is no need to load the System Certs for RootCAs because
-	// if the value is nil, it will default to checking against th System Certs.
-	var err error
-	var certPool *x509.CertPool
-	if len(c.CAFile) != 0 {
-		// Set up user specified truststore.
-		certPool, err = c.loadCert(c.CAFile)
-		if err != nil {
-			return nil, fmt.Errorf("failed to load CA CertPool: %w", err)
-		}
-	}
-
-	if (c.CertFile == "" && c.KeyFile != "") || (c.CertFile != "" && c.KeyFile == "") {
-		return nil, errors.New("for auth via TLS, either both certificate and key must be supplied, or neither")
+	certPool, err := c.loadCertPool()
+	if err != nil {
+		return nil, err
 	}
 
 	var getCertificate func(*tls.ClientHelloInfo) (*tls.Certificate, error)
 	var getClientCertificate func(*tls.CertificateRequestInfo) (*tls.Certificate, error)
-	if c.CertFile != "" && c.KeyFile != "" {
-		var certReloader *certReloader
-		certReloader, err = newCertReloader(c.CertFile, c.KeyFile, c.ReloadInterval)
-		if err != nil {
-			return nil, fmt.Errorf("failed to load TLS cert and key: %w", err)
-		}
+
+	var certReloader *certReloader
+	certReloader, err = c.newCertReloader(c.ReloadInterval)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load TLS cert and key: %w", err)
+	}
+
+	certReloader.lock.RLock()
+	if certReloader.cert != nil {
 		getCertificate = func(chi *tls.ClientHelloInfo) (*tls.Certificate, error) { return certReloader.GetCertificate() }
 		getClientCertificate = func(cri *tls.CertificateRequestInfo) (*tls.Certificate, error) { return certReloader.GetCertificate() }
 	}
+	certReloader.lock.RUnlock()
 
 	minTLS, err := convertVersion(c.MinVersion, defaultMinTLSVersion)
 	if err != nil {
@@ -201,17 +202,92 @@ func (c TLSSetting) loadTLSConfig() (*tls.Config, error) {
 	}, nil
 }
 
-func (c TLSSetting) loadCert(caPath string) (*x509.CertPool, error) {
-	caPEM, err := os.ReadFile(filepath.Clean(caPath))
+func (c TLSSetting) loadCertPool() (*x509.CertPool, error) {
+	// There is no need to load the System Certs for RootCAs because
+	// if the value is nil, it will default to checking against th System Certs.
+	var err error
+	var certPool *x509.CertPool
+
+	switch {
+	case len(c.CAFile) != 0 && len(c.CAPem) != 0:
+		return nil, fmt.Errorf("failed to load CA CertPool: CA File and PEM cannot both be provided")
+	case len(c.CAFile) != 0:
+		// Set up user specified truststore from file
+		certPool, err = c.loadCertFile(c.CAFile)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load CA CertPool File: %w", err)
+		}
+	case len(c.CAPem) != 0:
+		// Set up user specified truststore from PEM
+		certPool, err = c.loadCertPem(c.CAPem)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load CA CertPool PEM: %w", err)
+		}
+	}
+
+	return certPool, nil
+}
+
+func (c TLSSetting) loadCertFile(caPath string) (*x509.CertPool, error) {
+	caPEM, err := ioutil.ReadFile(filepath.Clean(caPath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to load CA %s: %w", caPath, err)
 	}
 
+	return c.loadCertPem(caPEM)
+}
+
+func (c TLSSetting) loadCertPem(caPEM []byte) (*x509.CertPool, error) {
 	certPool := x509.NewCertPool()
 	if !certPool.AppendCertsFromPEM(caPEM) {
-		return nil, fmt.Errorf("failed to parse CA %s", caPath)
+		return nil, fmt.Errorf("failed to parse CA %s", caPEM)
 	}
 	return certPool, nil
+}
+
+func (c TLSSetting) loadCertificate() (tls.Certificate, error) {
+	hasCertFile := len(c.CertFile) != 0
+	hasCertPem := len(c.CertPem) != 0
+	hasKeyFile := len(c.KeyFile) != 0
+	hasKeyPem := len(c.KeyPem) != 0
+	hasCert := hasCertFile || hasCertPem
+	hasKey := hasKeyFile || hasKeyPem
+
+	// Validate the incoming parameters.
+	switch {
+	case hasCert != hasKey:
+		return tls.Certificate{}, fmt.Errorf("for auth via TLS, either both certificate and key must be supplied, or neither")
+	case hasCertFile && !hasKeyFile:
+		return tls.Certificate{}, fmt.Errorf("failed to load TLS cert file and key PEM: both must be provided as a file or both as a PEM")
+	case !hasCertFile && hasKeyFile:
+		return tls.Certificate{}, fmt.Errorf("failed to load TLS cert PEM and key file: both must be provided as a file or both as a PEM")
+	case hasCertFile && hasCertPem:
+		return tls.Certificate{}, fmt.Errorf("for auth via TLS, certificate file and PEM cannot both be provided")
+	case hasKeyFile && hasKeyPem:
+		return tls.Certificate{}, fmt.Errorf("for auth via TLS, key file and PEM cannot both be provided")
+	}
+
+	// If we don't have a cert, return the nil pointer.
+	if !hasCert {
+		return tls.Certificate{}, nil
+	}
+
+	// Add the tls cert to the certificates from the files or in memory PEM.
+	var err error
+	var certificate tls.Certificate
+	if hasCertFile {
+		certificate, err = tls.LoadX509KeyPair(filepath.Clean(c.CertFile), filepath.Clean(c.KeyFile))
+		if err != nil {
+			return tls.Certificate{}, fmt.Errorf("failed to load TLS cert and key files: %w", err)
+		}
+	} else {
+		certificate, err = tls.X509KeyPair(c.CertPem, c.KeyPem)
+		if err != nil {
+			return tls.Certificate{}, fmt.Errorf("failed to load TLS cert and key PEMs: %w", err)
+		}
+	}
+
+	return certificate, err
 }
 
 // LoadTLSConfig loads the TLS configuration.
@@ -236,7 +312,7 @@ func (c TLSServerSetting) LoadTLSConfig() (*tls.Config, error) {
 		return nil, fmt.Errorf("failed to load TLS config: %w", err)
 	}
 	if c.ClientCAFile != "" {
-		certPool, err := c.loadCert(c.ClientCAFile)
+		certPool, err := c.loadCertFile(c.ClientCAFile)
 		if err != nil {
 			return nil, fmt.Errorf("failed to load TLS config: failed to load client CA CertPool: %w", err)
 		}
