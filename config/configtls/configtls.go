@@ -33,10 +33,16 @@ type TLSSetting struct {
 	// For a server this verifies client certificates. If empty uses system root CA.
 	// (optional)
 	CAFile string `mapstructure:"ca_file"`
+	// In memory PEM encoded cert. (optional)
+	CAPem []byte `mapstructure:"ca_pem"`
 	// Path to the TLS cert to use for TLS required connections. (optional)
 	CertFile string `mapstructure:"cert_file"`
+	// In memory PEM encoded TLS cert to use for TLS required connections. (optional)
+	CertPem []byte `mapstructure:"cert_pem"`
 	// Path to the TLS key to use for TLS required connections. (optional)
 	KeyFile string `mapstructure:"key_file"`
+	// In memory PEM encoded TLS key to use for TLS required connections. (optional)
+	KeyPem []byte `mapstructure:"key_pem"`
 }
 
 // TLSClientSetting contains TLS configurations that are specific to client
@@ -66,29 +72,15 @@ type TLSClientSetting struct {
 // LoadTLSConfig loads TLS certificates and returns a tls.Config.
 // This will set the RootCAs and Certificates of a tls.Config.
 func (c TLSSetting) LoadTLSConfig() (*tls.Config, error) {
-	// There is no need to load the System Certs for RootCAs because
-	// if the value is nil, it will default to checking against th System Certs.
-	var err error
-	var certPool *x509.CertPool
-	if len(c.CAFile) != 0 {
-		// setup user specified truststore
-		certPool, err = c.loadCert(c.CAFile)
-		if err != nil {
-			return nil, fmt.Errorf("failed to load CA CertPool: %w", err)
-		}
-	}
-
-	if (c.CertFile == "" && c.KeyFile != "") || (c.CertFile != "" && c.KeyFile == "") {
-		return nil, fmt.Errorf("for auth via TLS, either both certificate and key must be supplied, or neither")
+	certPool, err := c.loadCertPool(c.CAFile, c.CAPem)
+	if err != nil {
+		return nil, err
 	}
 
 	var certificates []tls.Certificate
-	if c.CertFile != "" && c.KeyFile != "" {
-		tlsCert, err := tls.LoadX509KeyPair(filepath.Clean(c.CertFile), filepath.Clean(c.KeyFile))
-		if err != nil {
-			return nil, fmt.Errorf("failed to load TLS cert and key: %w", err)
-		}
-		certificates = append(certificates, tlsCert)
+	certificates, err = c.loadCertificates(c.CertFile, c.CertPem, c.KeyFile, c.KeyPem)
+	if err != nil {
+		return nil, err
 	}
 
 	return &tls.Config{
@@ -97,17 +89,93 @@ func (c TLSSetting) LoadTLSConfig() (*tls.Config, error) {
 	}, nil
 }
 
-func (c TLSSetting) loadCert(caPath string) (*x509.CertPool, error) {
+func (c TLSSetting) loadCertPool(caPath string, caPEM []byte) (*x509.CertPool, error) {
+	// There is no need to load the System Certs for RootCAs because
+	// if the value is nil, it will default to checking against th System Certs.
+	var err error
+	var certPool *x509.CertPool
+
+	if len(c.CAFile) != 0 && len(c.CAPem) != 0 {
+		return nil, fmt.Errorf("failed to load CA CertPool: CA File and PEM cannot both be provided")
+	} else if len(c.CAFile) != 0 {
+		// Set up user specified truststore from file
+		certPool, err = c.loadCertFile(c.CAFile)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load CA CertPool File: %w", err)
+		}
+	} else if len(c.CAPem) != 0 {
+		// Set up user specified truststore from PEM
+		certPool, err = c.loadCertPem([]byte(c.CAPem))
+		if err != nil {
+			return nil, fmt.Errorf("failed to load CA CertPool PEM: %w", err)
+		}
+	}
+
+	return certPool, nil
+}
+
+func (c TLSSetting) loadCertFile(caPath string) (*x509.CertPool, error) {
 	caPEM, err := ioutil.ReadFile(filepath.Clean(caPath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to load CA %s: %w", caPath, err)
 	}
 
+	return c.loadCertPem(caPEM)
+}
+
+func (c TLSSetting) loadCertPem(caPEM []byte) (*x509.CertPool, error) {
 	certPool := x509.NewCertPool()
 	if !certPool.AppendCertsFromPEM(caPEM) {
-		return nil, fmt.Errorf("failed to parse CA %s", caPath)
+		return nil, fmt.Errorf("failed to parse CA %s", caPEM)
 	}
 	return certPool, nil
+}
+
+func (c TLSSetting) loadCertificates(certPath string, certPem []byte, keyPath string, keyPem []byte) ([]tls.Certificate, error) {
+	var err error
+	var certificates []tls.Certificate
+
+	hasCertFile := len(c.CertFile) != 0
+	hasCertPem := len(c.CertPem) != 0
+	hasKeyFile := len(c.KeyFile) != 0
+	hasKeyPem := len(c.KeyPem) != 0
+	hasCert := hasCertFile || hasCertPem
+	hasKey := hasKeyFile || hasKeyPem
+
+	// Validate the incoming parameters.
+	if hasCertFile && hasCertPem {
+		return nil, fmt.Errorf("for auth via TLS, certificate file and PEM cannot both be provided")
+	} else if hasKeyFile && hasKeyPem {
+		return nil, fmt.Errorf("for auth via TLS, key file and PEM cannot both be provided")
+	} else if hasCert != hasKey {
+		return nil, fmt.Errorf("for auth via TLS, either both certificate and key must be supplied, or neither")
+	} else if hasCertFile && !hasKeyFile {
+		return nil, fmt.Errorf("failed to load TLS cert file and key PEM: both must be provided as a file or both as a PEM")
+	} else if !hasCertFile && hasKeyFile {
+		return nil, fmt.Errorf("failed to load TLS cert PEM and key file: both must be provided as a file or both as a PEM")
+	}
+
+	// If we don't have any certs, return the empty slice.
+	if !hasCert {
+		return certificates, nil
+	}
+
+	// Add the tls cert to the certificates from the files or in memory PEM.
+	var tlsCert tls.Certificate
+	if hasCertFile {
+		tlsCert, err = tls.LoadX509KeyPair(filepath.Clean(c.CertFile), filepath.Clean(c.KeyFile))
+		if err != nil {
+			return nil, fmt.Errorf("failed to load TLS cert and key files: %w", err)
+		}
+	} else {
+		tlsCert, err = tls.X509KeyPair(c.CertPem, []byte(c.KeyPem))
+		if err != nil {
+			return nil, fmt.Errorf("failed to load TLS cert and key PEMs: %w", err)
+		}
+	}
+
+	certificates = append(certificates, tlsCert)
+	return certificates, err
 }
 
 func (c TLSClientSetting) LoadgRPCTLSClientCredentials() (grpc.DialOption, error) {
