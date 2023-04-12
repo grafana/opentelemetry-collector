@@ -19,7 +19,6 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -51,7 +50,7 @@ func TestOptionsToConfig(t *testing.T) {
 		{
 			name:        "should fail with invalid CA file content",
 			options:     TLSSetting{CAFile: filepath.Join("testdata", "testCA-bad.txt")},
-			expectError: "failed to parse CA",
+			expectError: "failed to parse cert",
 		},
 		{
 			name: "should load valid TLS  settings",
@@ -107,7 +106,7 @@ func TestOptionsToConfig(t *testing.T) {
 			options: TLSSetting{
 				CAFile: filepath.Join("testdata", "testCA-bad.txt"),
 			},
-			expectError: "failed to parse CA",
+			expectError: "failed to parse cert",
 		},
 		{
 			name: "should pass with valid CA pool",
@@ -145,7 +144,7 @@ func TestOptionsToConfig(t *testing.T) {
 		{
 			name:        "should fail with invalid CA PEM",
 			options:     TLSSetting{CAPem: readFilePanics("testdata/testCA-bad.txt")},
-			expectError: "failed to parse CA",
+			expectError: "failed to parse cert",
 		},
 		{
 			name: "should fail CA file and PEM both provided",
@@ -169,7 +168,6 @@ func TestOptionsToConfig(t *testing.T) {
 				CertFile: "testdata/server-1.crt",
 				KeyPem:   readFilePanics("testdata/server-1.key"),
 			},
-			expectError: "failed to load TLS cert file and key PEM: both must be provided as a file or both as a PEM",
 		},
 		{
 			name: "should fail Cert PEM and Key File provided",
@@ -177,7 +175,6 @@ func TestOptionsToConfig(t *testing.T) {
 				CertPem: readFilePanics("testdata/server-1.crt"),
 				KeyFile: "testdata/server-1.key",
 			},
-			expectError: "failed to load TLS cert PEM and key file: both must be provided as a file or both as a PEM",
 		},
 		{
 			name: "should fail Key file and PEM both provided",
@@ -246,7 +243,7 @@ func TestOptionsToConfig(t *testing.T) {
 }
 
 func readFilePanics(filePath string) []byte {
-	fileContents, err := ioutil.ReadFile(filepath.Clean(filePath))
+	fileContents, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		panic(fmt.Sprintf("failed to read file %s: %v", filePath, err))
 	}
@@ -373,7 +370,7 @@ func TestCertificateReload(t *testing.T) {
 			cert2:          "testCA-bad.txt",
 			key2:           "client-2.key",
 			dns1:           "example1",
-			errText:        "failed to load TLS cert and key: tls: failed to find any PEM data in certificate input",
+			errText:        "failed to load TLS cert and key: failed to load TLS cert and key PEMs: tls: failed to find any PEM data in certificate input",
 		},
 	}
 

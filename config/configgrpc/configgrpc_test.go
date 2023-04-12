@@ -240,7 +240,7 @@ func TestGRPCClientSettingsError(t *testing.T) {
 		host     component.Host
 	}{
 		{
-			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load CA /doesnt/exist:",
+			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load cert /doesnt/exist:",
 			settings: GRPCClientSettings{
 				Headers:     nil,
 				Endpoint:    "",
@@ -376,7 +376,7 @@ func TestGRPCServerSettingsError(t *testing.T) {
 		err      string
 	}{
 		{
-			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load CA /doesnt/exist: open /doesnt/exist:",
+			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load cert /doesnt/exist:",
 			settings: GRPCServerSettings{
 				NetAddr: confignet.NetAddr{
 					Endpoint:  "127.0.0.1:1234",
@@ -404,7 +404,7 @@ func TestGRPCServerSettingsError(t *testing.T) {
 			},
 		},
 		{
-			err: "^failed to load TLS config: failed to load client CA CertPool: failed to load CA /doesnt/exist:",
+			err: "^failed to load TLS config: failed to load client CA CertPool: failed to load cert /doesnt/exist:",
 			settings: GRPCServerSettings{
 				NetAddr: confignet.NetAddr{
 					Endpoint:  "127.0.0.1:1234",

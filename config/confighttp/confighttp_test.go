@@ -217,7 +217,7 @@ func TestHTTPClientSettingsError(t *testing.T) {
 		err      string
 	}{
 		{
-			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load CA /doesnt/exist:",
+			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load cert /doesnt/exist:",
 			settings: HTTPClientSettings{
 				Endpoint: "",
 				TLSSetting: configtls.TLSClientSetting{
@@ -353,7 +353,7 @@ func TestHTTPServerSettingsError(t *testing.T) {
 		err      string
 	}{
 		{
-			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load CA /doesnt/exist:",
+			err: "^failed to load TLS config: failed to load CA CertPool File: failed to load cert /doesnt/exist:",
 			settings: HTTPServerSettings{
 				Endpoint: "localhost:0",
 				TLSSetting: &configtls.TLSServerSetting{
@@ -375,7 +375,7 @@ func TestHTTPServerSettingsError(t *testing.T) {
 			},
 		},
 		{
-			err: "^failed to load TLS config: failed to load client CA CertPool: failed to load CA /doesnt/exist:",
+			err: "^failed to load TLS config: failed to load client CA CertPool: failed to load cert /doesnt/exist:",
 			settings: HTTPServerSettings{
 				Endpoint: "localhost:0",
 				TLSSetting: &configtls.TLSServerSetting{
