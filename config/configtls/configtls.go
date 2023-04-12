@@ -135,7 +135,7 @@ func (r *certReloader) GetCertificate() (*tls.Certificate, error) {
 	// If a reload is in progress this will block and we will skip reloading in the current
 	// call once we can continue
 	r.lock.RLock()
-	if r.tls.ReloadInterval != 0 && r.nextReload.Before(now) && (r.tls.hasCAFile() || r.tls.hasKeyFile()) {
+	if r.tls.ReloadInterval != 0 && r.nextReload.Before(now) && (r.tls.hasCertFile() || r.tls.hasKeyFile()) {
 		// Need to release the read lock, otherwise we deadlock
 		r.lock.RUnlock()
 		r.lock.Lock()
@@ -163,18 +163,16 @@ func (c TLSSetting) loadTLSConfig() (*tls.Config, error) {
 	var getCertificate func(*tls.ClientHelloInfo) (*tls.Certificate, error)
 	var getClientCertificate func(*tls.CertificateRequestInfo) (*tls.Certificate, error)
 
-	var certReloader *certReloader
-	certReloader, err = c.newCertReloader()
-	if err != nil {
-		return nil, fmt.Errorf("failed to load TLS cert and key: %w", err)
-	}
+	if c.hasCert() || c.hasKey() {
+		var certReloader *certReloader
+		certReloader, err = c.newCertReloader()
+		if err != nil {
+			return nil, fmt.Errorf("failed to load TLS cert and key: %w", err)
+		}
 
-	certReloader.lock.RLock()
-	if certReloader.cert != nil {
 		getCertificate = func(chi *tls.ClientHelloInfo) (*tls.Certificate, error) { return certReloader.GetCertificate() }
 		getClientCertificate = func(cri *tls.CertificateRequestInfo) (*tls.Certificate, error) { return certReloader.GetCertificate() }
 	}
-	certReloader.lock.RUnlock()
 
 	minTLS, err := convertVersion(c.MinVersion, defaultMinTLSVersion)
 	if err != nil {
@@ -241,7 +239,7 @@ func (c TLSSetting) loadCertificate() (tls.Certificate, error) {
 	switch {
 	case c.hasCert() != c.hasKey():
 		return tls.Certificate{}, fmt.Errorf("for auth via TLS, either both certificate and key must be supplied, or neither")
-	case !c.hasCert():
+	case !c.hasCert() && !c.hasKey():
 		return tls.Certificate{}, nil
 	case c.hasCertFile() && c.hasCertPem():
 		return tls.Certificate{}, fmt.Errorf("for auth via TLS, certificate file and PEM cannot both be provided")
