@@ -117,14 +117,14 @@ type certReloader struct {
 	tls        TLSSetting
 }
 
-func (c TLSSetting) newCertReloader(reloadInterval time.Duration) (*certReloader, error) {
+func (c TLSSetting) newCertReloader() (*certReloader, error) {
 	cert, err := c.loadCertificate()
 	if err != nil {
 		return nil, err
 	}
 	return &certReloader{
 		tls:        c,
-		nextReload: time.Now().Add(reloadInterval),
+		nextReload: time.Now().Add(c.ReloadInterval),
 		cert:       &cert,
 	}, nil
 }
@@ -164,7 +164,7 @@ func (c TLSSetting) loadTLSConfig() (*tls.Config, error) {
 	var getClientCertificate func(*tls.CertificateRequestInfo) (*tls.Certificate, error)
 
 	var certReloader *certReloader
-	certReloader, err = c.newCertReloader(c.ReloadInterval)
+	certReloader, err = c.newCertReloader()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load TLS cert and key: %w", err)
 	}
@@ -251,7 +251,6 @@ func (c TLSSetting) loadCertificate() (tls.Certificate, error) {
 
 	var certPem, keyPem []byte
 	var err error
-
 	if c.hasCertFile() {
 		certPem, err = os.ReadFile(c.CertFile)
 		if err != nil {
