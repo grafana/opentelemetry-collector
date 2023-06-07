@@ -12,6 +12,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric/noop"
 	"go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
@@ -64,6 +65,8 @@ type Settings struct {
 
 	UseExternalMetricsServer bool
 
+	TracerProvider trace.TracerProvider
+
 	// For testing purpose only.
 	useOtel *bool
 }
@@ -98,7 +101,7 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		telemetryInitializer: newColTelemetry(useOtel, disableHighCard, extendedConfig),
 	}
 	var err error
-	srv.telemetry, err = telemetry.New(ctx, telemetry.Settings{ZapOptions: set.LoggingOptions}, cfg.Telemetry)
+	srv.telemetry, err = telemetry.New(ctx, telemetry.Settings{ZapOptions: set.LoggingOptions}, cfg.Telemetry, set.TracerProvider)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get logger: %w", err)
 	}
