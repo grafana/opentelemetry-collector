@@ -65,6 +65,8 @@ type Settings struct {
 
 	UseExternalMetricsServer bool
 
+	DisableProcessMetrics bool
+
 	TracerProvider trace.TracerProvider
 
 	// For testing purpose only.
@@ -218,7 +220,7 @@ func (srv *Service) initExtensionsAndPipeline(ctx context.Context, set Settings,
 		return fmt.Errorf("failed to build pipelines: %w", err)
 	}
 
-	if cfg.Telemetry.Metrics.Level != configtelemetry.LevelNone && cfg.Telemetry.Metrics.Address != "" {
+	if !set.DisableProcessMetrics && cfg.Telemetry.Metrics.Level != configtelemetry.LevelNone && (set.UseExternalMetricsServer || cfg.Telemetry.Metrics.Address != "") {
 		// The process telemetry initialization requires the ballast size, which is available after the extensions are initialized.
 		if err = proctelemetry.RegisterProcessMetrics(srv.telemetryInitializer.ocRegistry, srv.telemetryInitializer.mp, obsreportconfig.UseOtelForInternalMetricsfeatureGate.IsEnabled(), getBallastSize(srv.host)); err != nil {
 			return fmt.Errorf("failed to register process metrics: %w", err)
