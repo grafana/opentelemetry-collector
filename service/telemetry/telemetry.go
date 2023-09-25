@@ -14,8 +14,9 @@ import (
 )
 
 type Telemetry struct {
-	logger         *zap.Logger
-	tracerProvider *sdktrace.TracerProvider
+	logger                 *zap.Logger
+	internalTracerProvider *sdktrace.TracerProvider
+	tracerProvider         trace.TracerProvider
 }
 
 func (t *Telemetry) TracerProvider() trace.TracerProvider {
@@ -28,9 +29,12 @@ func (t *Telemetry) Logger() *zap.Logger {
 
 func (t *Telemetry) Shutdown(ctx context.Context) error {
 	// TODO: Sync logger.
-	return multierr.Combine(
-		t.tracerProvider.Shutdown(ctx),
-	)
+	if t.internalTracerProvider != nil {
+		return multierr.Combine(
+			t.internalTracerProvider.Shutdown(ctx),
+		)
+	}
+	return nil
 }
 
 // Settings holds configuration for building Telemetry.
@@ -39,18 +43,28 @@ type Settings struct {
 }
 
 // New creates a new Telemetry from Config.
-func New(_ context.Context, set Settings, cfg Config) (*Telemetry, error) {
+func New(_ context.Context, set Settings, cfg Config, tracerProvider trace.TracerProvider) (*Telemetry, error) {
 	logger, err := newLogger(cfg.Logs, set.ZapOptions)
 	if err != nil {
 		return nil, err
 	}
-	tp := sdktrace.NewTracerProvider(
-		// needed for supporting the zpages extension
-		sdktrace.WithSampler(alwaysRecord()),
-	)
+	var tp trace.TracerProvider
+	var internalTp *sdktrace.TracerProvider
+
+	if tracerProvider != nil {
+		tp = tracerProvider
+	} else {
+		internalTp = sdktrace.NewTracerProvider(
+			// needed for supporting the zpages extension
+			sdktrace.WithSampler(alwaysRecord()),
+		)
+		tp = internalTp
+	}
+
 	return &Telemetry{
-		logger:         logger,
-		tracerProvider: tp,
+		logger:                 logger,
+		internalTracerProvider: internalTp,
+		tracerProvider:         tp,
 	}, nil
 }
 
