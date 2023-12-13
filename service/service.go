@@ -11,7 +11,9 @@ import (
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric/noop"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
@@ -63,6 +65,16 @@ type Settings struct {
 	// LoggingOptions provides a way to change behavior of zap logging.
 	LoggingOptions []zap.Option
 
+	OtelMetricViews []sdkmetric.View
+
+	OtelMetricReader sdkmetric.Reader
+
+	UseExternalMetricsServer bool
+
+	DisableProcessMetrics bool
+
+	TracerProvider trace.TracerProvider
+
 	// For testing purpose only.
 	useOtel *bool
 }
@@ -99,7 +111,8 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		collectorConf:        set.CollectorConf,
 	}
 	var err error
-	srv.telemetry, err = telemetry.New(ctx, telemetry.Settings{ZapOptions: set.LoggingOptions}, cfg.Telemetry)
+	srv.telemetry, err = telemetry.New(ctx, telemetry.Settings{ZapOptions: set.LoggingOptions},
+		cfg.Telemetry, set.TracerProvider)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get logger: %w", err)
 	}
@@ -116,7 +129,8 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		Status:   status.NewReporter(srv.host.notifyComponentStatusChange),
 	}
 
-	if err = srv.telemetryInitializer.init(res, srv.telemetrySettings, cfg.Telemetry, set.AsyncErrorChannel); err != nil {
+	if err = srv.telemetryInitializer.init(res, srv.telemetrySettings, cfg.Telemetry, set.AsyncErrorChannel,
+		set.OtelMetricViews, set.OtelMetricReader, set.UseExternalMetricsServer); err != nil {
 		return nil, fmt.Errorf("failed to initialize telemetry: %w", err)
 	}
 	srv.telemetrySettings.MeterProvider = srv.telemetryInitializer.mp
@@ -182,6 +196,10 @@ func (srv *Service) Shutdown(ctx context.Context) error {
 	var errs error
 
 	// Begin shutdown sequence.
+	if srv.telemetrySettings.Logger == nil {
+		return fmt.Errorf("no logger has been initialized")
+	}
+
 	srv.telemetrySettings.Logger.Info("Starting shutdown...")
 
 	if err := srv.host.serviceExtensions.NotifyPipelineNotReady(); err != nil {
@@ -233,7 +251,8 @@ func (srv *Service) initExtensionsAndPipeline(ctx context.Context, set Settings,
 		return fmt.Errorf("failed to build pipelines: %w", err)
 	}
 
-	if cfg.Telemetry.Metrics.Level != configtelemetry.LevelNone && cfg.Telemetry.Metrics.Address != "" {
+	if !set.DisableProcessMetrics && cfg.Telemetry.Metrics.Level != configtelemetry.LevelNone &&
+		(set.UseExternalMetricsServer || cfg.Telemetry.Metrics.Address != "") {
 		// The process telemetry initialization requires the ballast size, which is available after the extensions are initialized.
 		if err = proctelemetry.RegisterProcessMetrics(srv.telemetryInitializer.ocRegistry, srv.telemetryInitializer.mp, obsreportconfig.UseOtelForInternalMetricsfeatureGate.IsEnabled(), getBallastSize(srv.host)); err != nil {
 			return fmt.Errorf("failed to register process metrics: %w", err)

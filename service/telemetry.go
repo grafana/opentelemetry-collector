@@ -6,6 +6,7 @@ package service // import "go.opentelemetry.io/collector/service"
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -20,6 +21,8 @@ import (
 	"go.opentelemetry.io/contrib/config"
 	"go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/bridge/opencensus"
+	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/metric"
 	noopmetric "go.opentelemetry.io/otel/metric/noop"
 	"go.opentelemetry.io/otel/propagation"
@@ -73,8 +76,9 @@ func newColTelemetry(useOtel bool, disableHighCardinality bool, extendedConfig b
 	}
 }
 
-func (tel *telemetryInitializer) init(res *resource.Resource, settings servicetelemetry.TelemetrySettings, cfg telemetry.Config, asyncErrorChannel chan error) error {
-	if cfg.Metrics.Level == configtelemetry.LevelNone || (cfg.Metrics.Address == "" && len(cfg.Metrics.Readers) == 0) {
+func (tel *telemetryInitializer) init(res *resource.Resource, settings servicetelemetry.TelemetrySettings, cfg telemetry.Config,
+	asyncErrorChannel chan error, otelMetricViews []sdkmetric.View, otelMetricReader sdkmetric.Reader, useExternalMetricsServer bool) error {
+	if cfg.Metrics.Level == configtelemetry.LevelNone || (!useExternalMetricsServer && cfg.Metrics.Address == "" && len(cfg.Metrics.Readers) == 0) {
 		settings.Logger.Info(
 			"Skipping telemetry setup.",
 			zap.String(zapKeyTelemetryAddress, cfg.Metrics.Address),
@@ -97,7 +101,7 @@ func (tel *telemetryInitializer) init(res *resource.Resource, settings servicete
 		return err
 	}
 
-	return tel.initMetrics(res, settings.Logger, cfg, asyncErrorChannel)
+	return tel.initMetrics(res, settings.Logger, cfg, asyncErrorChannel, otelMetricViews, otelMetricReader, useExternalMetricsServer)
 }
 
 func (tel *telemetryInitializer) initTraces(res *resource.Resource, cfg telemetry.Config) (trace.TracerProvider, error) {
@@ -112,11 +116,21 @@ func (tel *telemetryInitializer) initTraces(res *resource.Resource, cfg telemetr
 	return proctelemetry.InitTracerProvider(res, opts)
 }
 
-func (tel *telemetryInitializer) initMetrics(res *resource.Resource, logger *zap.Logger, cfg telemetry.Config, asyncErrorChannel chan error) error {
+func (tel *telemetryInitializer) initMetrics(res *resource.Resource, logger *zap.Logger, cfg telemetry.Config,
+	asyncErrorChannel chan error, otelMetricViews []sdkmetric.View, otelMetricReader sdkmetric.Reader, useExternalMetricsServer bool) error {
 	// Initialize the ocRegistry, still used by the process metrics.
 	tel.ocRegistry = ocmetric.NewRegistry()
 	if !tel.useOtel && !tel.extendedConfig {
 		return tel.initOpenCensus(res, logger, cfg.Metrics.Address, cfg.Metrics.Level, asyncErrorChannel)
+	}
+
+	if useExternalMetricsServer {
+		if len(cfg.Metrics.Address) != 0 || len(cfg.Metrics.Readers) != 0 {
+			logger.Sugar().Debugf(
+				"Using an external metrics server - Prometheus metrics may not be served on %q or %q", cfg.Metrics.Address, cfg.Metrics.Readers,
+			)
+		}
+		return tel.initOpenTelemetry(res, otelMetricViews, otelMetricReader)
 	}
 
 	if len(cfg.Metrics.Address) != 0 {
@@ -166,6 +180,32 @@ func (tel *telemetryInitializer) initMetrics(res *resource.Resource, logger *zap
 	}
 
 	mp, err := proctelemetry.InitOpenTelemetry(res, opts, tel.disableHighCardinality)
+	if err != nil {
+		return err
+	}
+	tel.mp = mp
+	return nil
+}
+
+func (tel *telemetryInitializer) initOpenTelemetry(res *resource.Resource, otelMetricViews []sdkmetric.View, otelMetricReader sdkmetric.Reader) error {
+	promRegistry := prometheus.NewRegistry()
+	metricproducer.GlobalManager().AddProducer(tel.ocRegistry)
+	wrappedRegisterer := prometheus.WrapRegistererWithPrefix("otelcol_", promRegistry)
+	exporter, err := otelprom.New(
+		otelprom.WithRegisterer(wrappedRegisterer),
+		otelprom.WithoutUnits(),
+		otelprom.WithProducer(opencensus.NewMetricProducer()))
+	if err != nil {
+		return fmt.Errorf("error creating otel prometheus exporter: %w", err)
+	}
+
+	metricOptions := []sdkmetric.Option{
+		sdkmetric.WithReader(exporter),
+		sdkmetric.WithReader(otelMetricReader),
+		sdkmetric.WithView(otelMetricViews...),
+	}
+
+	mp, err := proctelemetry.InitOpenTelemetry(res, metricOptions, tel.disableHighCardinality)
 	if err != nil {
 		return err
 	}
