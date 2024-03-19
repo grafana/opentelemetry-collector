@@ -100,8 +100,8 @@ func (cm *configProvider) Get(ctx context.Context, factories Factories) (*Config
 		return nil, fmt.Errorf("cannot resolve the configuration: %w", err)
 	}
 
-	var cfg *configSettings
-	if cfg, err = unmarshal(conf, factories); err != nil {
+	var cfg *ConfigSettings
+	if cfg, err = Unmarshal(conf, factories); err != nil {
 		return nil, fmt.Errorf("cannot unmarshal the configuration: %w", err)
 	}
 
