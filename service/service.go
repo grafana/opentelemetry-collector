@@ -79,7 +79,6 @@ type Service struct {
 
 func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 	disableHighCard := obsreportconfig.DisableHighCardinalityMetricsfeatureGate.IsEnabled()
-	extendedConfig := obsreportconfig.UseOtelWithSDKConfigurationForInternalTelemetryFeatureGate.IsEnabled()
 	srv := &Service{
 		buildInfo: set.BuildInfo,
 		host: &serviceHost{
@@ -112,7 +111,6 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 			OtelMetricReader: set.OtelMetricReader,
 		},
 		disableHighCard,
-		extendedConfig,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create metric provider: %w", err)
@@ -268,15 +266,6 @@ func (srv *Service) initExtensionsAndPipeline(ctx context.Context, set Settings,
 // This is a temporary API that may be removed soon after investigating how the collector should record different events.
 func (srv *Service) Logger() *zap.Logger {
 	return srv.telemetrySettings.Logger
-}
-
-func getBallastSize(host component.Host) uint64 {
-	for _, ext := range host.GetExtensions() {
-		if bExt, ok := ext.(interface{ GetBallastSize() uint64 }); ok {
-			return bExt.GetBallastSize()
-		}
-	}
-	return 0
 }
 
 func pdataFromSdk(res *sdkresource.Resource) pcommon.Resource {

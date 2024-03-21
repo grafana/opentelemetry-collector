@@ -13,11 +13,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	zapKeyTelemetryAddress = "address"
-	zapKeyTelemetryLevel   = "level"
-)
-
 type meterProvider struct {
 	*sdkmetric.MeterProvider
 }
@@ -32,7 +27,7 @@ type meterProviderSettings struct {
 	DisableProcessMetrics bool
 }
 
-func newMeterProvider(set meterProviderSettings, disableHighCardinality bool, extendedConfig bool) (metric.MeterProvider, error) {
+func newMeterProvider(set meterProviderSettings, disableHighCardinality bool) (metric.MeterProvider, error) {
 	set.logger.Info("Setting up own telemetry...")
 
 	mp := &meterProvider{}
