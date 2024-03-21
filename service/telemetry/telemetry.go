@@ -12,7 +12,6 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
-	"go.uber.org/multierr"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
@@ -33,7 +32,7 @@ var (
 
 type Telemetry struct {
 	logger         *zap.Logger
-	tracerProvider *sdktrace.TracerProvider
+	tracerProvider trace.TracerProvider
 }
 
 func (t *Telemetry) TracerProvider() trace.TracerProvider {
@@ -45,10 +44,7 @@ func (t *Telemetry) Logger() *zap.Logger {
 }
 
 func (t *Telemetry) Shutdown(ctx context.Context) error {
-	// TODO: Sync logger.
-	return multierr.Combine(
-		t.tracerProvider.Shutdown(ctx),
-	)
+	return nil
 }
 
 // Settings holds configuration for building Telemetry.
@@ -58,15 +54,17 @@ type Settings struct {
 }
 
 // New creates a new Telemetry from Config.
-func New(ctx context.Context, set Settings, cfg Config) (*Telemetry, error) {
+func New(ctx context.Context, set Settings, cfg Config, tp trace.TracerProvider) (*Telemetry, error) {
 	logger, err := newLogger(cfg.Logs, set.ZapOptions)
 	if err != nil {
 		return nil, err
 	}
 
-	tp, err := newTracerProvider(ctx, set, cfg)
-	if err != nil {
-		return nil, err
+	if tp == nil {
+		tp, err = newTracerProvider(ctx, set, cfg)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &Telemetry{

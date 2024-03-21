@@ -9,12 +9,13 @@ import (
 	"fmt"
 	"runtime"
 
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	sdkresource "go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config/configtelemetry"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/connector"
 	"go.opentelemetry.io/collector/exporter"
@@ -26,7 +27,6 @@ import (
 	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/service/extensions"
 	"go.opentelemetry.io/collector/service/internal/graph"
-	"go.opentelemetry.io/collector/service/internal/proctelemetry"
 	"go.opentelemetry.io/collector/service/internal/resource"
 	"go.opentelemetry.io/collector/service/internal/servicetelemetry"
 	"go.opentelemetry.io/collector/service/internal/status"
@@ -61,6 +61,12 @@ type Settings struct {
 
 	// LoggingOptions provides a way to change behavior of zap logging.
 	LoggingOptions []zap.Option
+
+	OtelMetricViews []sdkmetric.View
+
+	OtelMetricReader sdkmetric.Reader
+
+	TracerProvider trace.TracerProvider
 }
 
 // Service represents the implementation of a component.Host.
@@ -73,7 +79,6 @@ type Service struct {
 
 func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 	disableHighCard := obsreportconfig.DisableHighCardinalityMetricsfeatureGate.IsEnabled()
-	extendedConfig := obsreportconfig.UseOtelWithSDKConfigurationForInternalTelemetryFeatureGate.IsEnabled()
 	srv := &Service{
 		buildInfo: set.BuildInfo,
 		host: &serviceHost{
@@ -87,7 +92,8 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		},
 		collectorConf: set.CollectorConf,
 	}
-	tel, err := telemetry.New(ctx, telemetry.Settings{BuildInfo: set.BuildInfo, ZapOptions: set.LoggingOptions}, cfg.Telemetry)
+	tel, err := telemetry.New(ctx, telemetry.Settings{BuildInfo: set.BuildInfo, ZapOptions: set.LoggingOptions},
+		cfg.Telemetry, set.TracerProvider)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get logger: %w", err)
 	}
@@ -99,11 +105,12 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		meterProviderSettings{
 			res:               res,
 			logger:            logger,
-			cfg:               cfg.Telemetry.Metrics,
 			asyncErrorChannel: set.AsyncErrorChannel,
+
+			OtelMetricViews:  set.OtelMetricViews,
+			OtelMetricReader: set.OtelMetricReader,
 		},
 		disableHighCard,
-		extendedConfig,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create metric provider: %w", err)
@@ -203,6 +210,9 @@ func (srv *Service) Shutdown(ctx context.Context) error {
 	var errs error
 
 	// Begin shutdown sequence.
+	if srv.telemetrySettings.Logger == nil {
+		return fmt.Errorf("no logger has been initialized")
+	}
 	srv.telemetrySettings.Logger.Info("Starting shutdown...")
 
 	if err := srv.host.serviceExtensions.NotifyPipelineNotReady(); err != nil {
@@ -249,13 +259,6 @@ func (srv *Service) initExtensionsAndPipeline(ctx context.Context, set Settings,
 		return fmt.Errorf("failed to build pipelines: %w", err)
 	}
 
-	if cfg.Telemetry.Metrics.Level != configtelemetry.LevelNone && cfg.Telemetry.Metrics.Address != "" {
-		// The process telemetry initialization requires the ballast size, which is available after the extensions are initialized.
-		if err = proctelemetry.RegisterProcessMetrics(srv.telemetrySettings.MeterProvider, getBallastSize(srv.host)); err != nil {
-			return fmt.Errorf("failed to register process metrics: %w", err)
-		}
-	}
-
 	return nil
 }
 
@@ -263,15 +266,6 @@ func (srv *Service) initExtensionsAndPipeline(ctx context.Context, set Settings,
 // This is a temporary API that may be removed soon after investigating how the collector should record different events.
 func (srv *Service) Logger() *zap.Logger {
 	return srv.telemetrySettings.Logger
-}
-
-func getBallastSize(host component.Host) uint64 {
-	for _, ext := range host.GetExtensions() {
-		if bExt, ok := ext.(interface{ GetBallastSize() uint64 }); ok {
-			return bExt.GetBallastSize()
-		}
-	}
-	return 0
 }
 
 func pdataFromSdk(res *sdkresource.Resource) pcommon.Resource {
