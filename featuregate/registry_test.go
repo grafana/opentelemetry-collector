@@ -4,6 +4,7 @@
 package featuregate
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -65,6 +66,25 @@ func TestRegistryApply(t *testing.T) {
 	assert.False(t, fooGate.IsEnabled())
 	assert.NoError(t, r.Set(fooGate.ID(), true))
 	assert.True(t, fooGate.IsEnabled())
+}
+
+func TestMustRegisterWithHandler(t *testing.T) {
+	r := NewRegistry()
+
+	handlerCalls := 0
+	r.SetAlreadyRegisteredErrHandler(
+		func(gate *Gate, err error) *Gate {
+			assert.True(t, errors.Is(err, ErrAlreadyRegistered))
+			handlerCalls++
+			return gate
+		})
+	g1 := r.MustRegister("some.feature", StageAlpha)
+	assert.Equal(t, 0, handlerCalls)
+
+	g2 := r.MustRegister("some.feature", StageAlpha)
+	assert.Equal(t, 1, handlerCalls)
+
+	assert.Same(t, g1, g2)
 }
 
 func TestRegisterGateLifecycle(t *testing.T) {

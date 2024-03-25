@@ -34,7 +34,8 @@ func GlobalRegistry() *Registry {
 }
 
 type Registry struct {
-	gates sync.Map
+	gates            sync.Map
+	duplicateHandler func(*Gate, error) *Gate
 }
 
 // NewRegistry returns a new empty Registry.
@@ -107,13 +108,26 @@ func WithRegisterToVersion(toVersion string) RegisterOption {
 	})
 }
 
-// MustRegister like Register but panics if an invalid ID or gate options are provided.
+// MustRegister is like Register, but it will panic if an invalid ID or gate options are provided. By default, it will
+// also panic on duplicate feature gate registration attempts, however this bahaviour can be changed via
+// SetAlreadyRegisteredErrHandler.
 func (r *Registry) MustRegister(id string, stage Stage, opts ...RegisterOption) *Gate {
 	g, err := r.Register(id, stage, opts...)
 	if err != nil {
-		panic(err)
+		if errors.Is(err, ErrAlreadyRegistered) && r.duplicateHandler != nil {
+			existing, _ := r.gates.Load(id)
+			return r.duplicateHandler(existing.(*Gate), err)
+		} else {
+			panic(err)
+		}
 	}
 	return g
+}
+
+// SetAlreadyRegisteredErrHandler allows to configure a function that will be called when a feature gate with duplicate
+// ID is attempted to be registered via MustRegister, which can be used to resolve conflicts instead of panicking.
+func (r *Registry) SetAlreadyRegisteredErrHandler(f func(*Gate, error) *Gate) {
+	r.duplicateHandler = f
 }
 
 func validateID(id string) error {
