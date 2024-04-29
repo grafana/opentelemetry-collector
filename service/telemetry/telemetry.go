@@ -61,10 +61,17 @@ type Settings struct {
 }
 
 // New creates a new Telemetry from Config.
-func New(ctx context.Context, set Settings, cfg Config) (*Telemetry, error) {
+func New(ctx context.Context, set Settings, cfg Config, tp trace.TracerProvider) (*Telemetry, error) {
 	logger, err := newLogger(cfg.Logs, set.ZapOptions)
 	if err != nil {
 		return nil, err
+	}
+
+	if tp != nil {
+		return &Telemetry{
+			logger:         logger,
+			tracerProvider: tp,
+		}, nil
 	}
 
 	sdk, err := config.NewSDK(

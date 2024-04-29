@@ -55,7 +55,7 @@ func TestTelemetryConfiguration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			telemetry, err := New(context.Background(), Settings{ZapOptions: []zap.Option{}}, *tt.cfg)
+			telemetry, err := New(context.Background(), Settings{ZapOptions: []zap.Option{}}, *tt.cfg, nil)
 			if tt.success {
 				assert.NoError(t, err)
 				assert.NotNil(t, telemetry)
@@ -111,7 +111,7 @@ func TestSampledLogger(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			telemetry, err := New(context.Background(), Settings{ZapOptions: []zap.Option{}}, *tt.cfg)
+			telemetry, err := New(context.Background(), Settings{ZapOptions: []zap.Option{}}, *tt.cfg, nil)
 			assert.NoError(t, err)
 			assert.NotNil(t, telemetry)
 			assert.NotNil(t, telemetry.Logger())
