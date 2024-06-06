@@ -674,6 +674,8 @@ func TestGRPCMaxRecvSize(t *testing.T) {
 	require.NoError(t, err)
 
 	td := testdata.GenerateTraces(50000)
+	err = exportTraces(cc, td)
+	require.Error(t, err)
 	require.Error(t, exportTraces(cc, td))
 	assert.NoError(t, cc.Close())
 	require.NoError(t, recv.Shutdown(context.Background()))

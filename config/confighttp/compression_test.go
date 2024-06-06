@@ -133,7 +133,7 @@ func TestHTTPCustomDecompression(t *testing.T) {
 			return io.NopCloser(strings.NewReader("decompressed body")), nil
 		},
 	}
-	srv := httptest.NewServer(httpContentDecompressor(handler, defaultErrorHandler, decoders))
+	srv := httptest.NewServer(httpContentDecompressor(handler, defaultMaxRequestBodySize, defaultErrorHandler, decoders))
 
 	t.Cleanup(srv.Close)
 
@@ -252,7 +252,7 @@ func TestHTTPContentDecompressionHandler(t *testing.T) {
 				require.NoError(t, err, "failed to read request body: %v", err)
 				assert.EqualValues(t, testBody, string(body))
 				w.WriteHeader(http.StatusOK)
-			}), defaultErrorHandler, noDecoders))
+			}), defaultMaxRequestBodySize, defaultErrorHandler, noDecoders))
 			t.Cleanup(srv.Close)
 
 			req, err := http.NewRequest(http.MethodGet, srv.URL, tt.reqBody)
