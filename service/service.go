@@ -11,14 +11,13 @@ import (
 	"fmt"
 	"runtime"
 
-	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/noop"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	sdkresource "go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config/configtelemetry"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/connector"
 	"go.opentelemetry.io/collector/exporter"
@@ -31,7 +30,6 @@ import (
 	"go.opentelemetry.io/collector/service/extensions"
 	"go.opentelemetry.io/collector/service/internal/builders"
 	"go.opentelemetry.io/collector/service/internal/graph"
-	"go.opentelemetry.io/collector/service/internal/proctelemetry"
 	"go.opentelemetry.io/collector/service/internal/resource"
 	"go.opentelemetry.io/collector/service/internal/status"
 	"go.opentelemetry.io/collector/service/telemetry"
@@ -100,6 +98,12 @@ type Settings struct {
 
 	// LoggingOptions provides a way to change behavior of zap logging.
 	LoggingOptions []zap.Option
+
+	OtelMetricViews []sdkmetric.View
+
+	OtelMetricReader sdkmetric.Reader
+
+	TracerProvider trace.TracerProvider
 }
 
 // Service represents the implementation of a component.Host.
@@ -113,7 +117,6 @@ type Service struct {
 // New creates a new Service, its telemetry, and Components.
 func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 	disableHighCard := obsreportconfig.DisableHighCardinalityMetricsfeatureGate.IsEnabled()
-	extendedConfig := obsreportconfig.UseOtelWithSDKConfigurationForInternalTelemetryFeatureGate.IsEnabled()
 
 	receivers := set.Receivers
 	if receivers == nil {
@@ -170,18 +173,14 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		return nil, fmt.Errorf("failed to create logger: %w", err)
 	}
 
-	tracerProvider, err := telFactory.CreateTracerProvider(ctx, telset, &cfg.Telemetry)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create tracer provider: %w", err)
-	}
-
 	logger.Info("Setting up own telemetry...")
 
 	mp, err := newMeterProvider(
 		meterProviderSettings{
 			res:               res,
-			cfg:               cfg.Telemetry.Metrics,
 			asyncErrorChannel: set.AsyncErrorChannel,
+			OtelMetricViews:   set.OtelMetricViews,
+			OtelMetricReader:  set.OtelMetricReader,
 		},
 		disableHighCard,
 	)
@@ -189,17 +188,10 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		return nil, fmt.Errorf("failed to create metric provider: %w", err)
 	}
 
-	logsAboutMeterProvider(logger, cfg.Telemetry.Metrics, mp, extendedConfig)
 	srv.telemetrySettings = component.TelemetrySettings{
-		LeveledMeterProvider: func(level configtelemetry.Level) metric.MeterProvider {
-			if level <= cfg.Telemetry.Metrics.Level {
-				return mp
-			}
-			return noop.MeterProvider{}
-		},
 		Logger:         logger,
 		MeterProvider:  mp,
-		TracerProvider: tracerProvider,
+		TracerProvider: set.TracerProvider,
 		MetricsLevel:   cfg.Telemetry.Metrics.Level,
 		// Construct telemetry attributes from build info and config's resource attributes.
 		Resource: pcommonRes,
@@ -222,35 +214,7 @@ func New(ctx context.Context, set Settings, cfg Config) (*Service, error) {
 		return nil, err
 	}
 
-	if cfg.Telemetry.Metrics.Level != configtelemetry.LevelNone && cfg.Telemetry.Metrics.Address != "" {
-		// The process telemetry initialization requires the ballast size, which is available after the extensions are initialized.
-		if err = proctelemetry.RegisterProcessMetrics(srv.telemetrySettings); err != nil {
-			return nil, fmt.Errorf("failed to register process metrics: %w", err)
-		}
-	}
-
 	return srv, nil
-}
-
-func logsAboutMeterProvider(logger *zap.Logger, cfg telemetry.MetricsConfig, mp metric.MeterProvider, extendedConfig bool) {
-	if cfg.Level == configtelemetry.LevelNone || (cfg.Address == "" && len(cfg.Readers) == 0) {
-		logger.Info(
-			"Skipped telemetry setup.",
-			zap.String(zapKeyTelemetryAddress, cfg.Address),
-			zap.Stringer(zapKeyTelemetryLevel, cfg.Level),
-		)
-		return
-	}
-
-	if len(cfg.Address) != 0 && extendedConfig {
-		logger.Warn("service::telemetry::metrics::address is being deprecated in favor of service::telemetry::metrics::readers")
-	}
-
-	if lmp, ok := mp.(interface {
-		LogAboutServers(logger *zap.Logger, cfg telemetry.MetricsConfig)
-	}); ok {
-		lmp.LogAboutServers(logger, cfg)
-	}
 }
 
 // Start starts the extensions and pipelines. If Start fails Shutdown should be called to ensure a clean state.
@@ -323,6 +287,9 @@ func (srv *Service) Shutdown(ctx context.Context) error {
 	var errs error
 
 	// Begin shutdown sequence.
+	if srv.telemetrySettings.Logger == nil {
+		return fmt.Errorf("no logger has been initialized")
+	}
 	srv.telemetrySettings.Logger.Info("Starting shutdown...")
 
 	if err := srv.host.ServiceExtensions.NotifyPipelineNotReady(); err != nil {
