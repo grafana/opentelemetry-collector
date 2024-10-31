@@ -9,6 +9,7 @@ import (
 
 	"go.opentelemetry.io/contrib/config"
 	"go.opentelemetry.io/otel/metric"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -39,6 +40,8 @@ type Settings struct {
 	BuildInfo         component.BuildInfo
 	AsyncErrorChannel chan error
 	ZapOptions        []zap.Option
+	OtelMetricViews   []sdkmetric.View
+	OtelMetricReader  sdkmetric.Reader
 }
 
 // Factory is factory interface for telemetry.
@@ -79,8 +82,9 @@ func NewFactory() Factory {
 			return newMeterProvider(
 				meterProviderSettings{
 					res:               resource.New(set.BuildInfo, c.Resource),
-					cfg:               c.Metrics,
 					asyncErrorChannel: set.AsyncErrorChannel,
+					OtelMetricViews:   set.OtelMetricViews,
+					OtelMetricReader:  set.OtelMetricReader,
 				},
 				disableHighCard,
 			)
