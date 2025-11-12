@@ -338,12 +338,12 @@ const unmarshalProtoString = `
 		} else {
 			ov = ProtoPool{{ .oneOfMessageName }}.Get().(*{{ .oneOfMessageName }})
 		}
-		ov.{{ .fieldName }} = string(buf[startPos:pos])
+		ov.{{ .fieldName }} = proto.YoloString(buf[startPos:pos])
 		orig.{{ .oneOfGroup }} = ov
 {{- else if .repeated -}}
-		orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, string(buf[startPos:pos]))
+		orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, proto.YoloString(buf[startPos:pos]))
 {{- else -}}
-		orig.{{ .fieldName }} = string(buf[startPos:pos])
+		orig.{{ .fieldName }} = proto.YoloString(buf[startPos:pos])
 {{- end }}{{- end }}`
 
 const unmarshalProtoBytes = `	
