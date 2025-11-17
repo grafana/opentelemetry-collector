@@ -54,6 +54,7 @@ type Field struct {
 	ID                uint32
 	Repeated          bool
 	Nullable          bool
+	Lazy              bool
 }
 
 func (pf *Field) GetName() string { return pf.Name }
