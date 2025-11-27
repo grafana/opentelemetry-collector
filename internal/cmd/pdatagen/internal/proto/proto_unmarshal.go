@@ -20,6 +20,7 @@ const unmarshalProtoFloat = `{{ if .repeated -}}
 			}
 			startPos := pos - length
 			size := length / {{ div .bitSize 8 }}
+	{{ if not .lazy -}}
 			orig.{{ .fieldName }} = make([]{{ .goType }}, size)
 			var num uint{{ .bitSize }}
 			for i := 0; i < size; i++ {
@@ -29,16 +30,31 @@ const unmarshalProtoFloat = `{{ if .repeated -}}
 				}
 				orig.{{ .fieldName }}[i] = math.Float{{ .bitSize }}frombits(num)
 			}
+	{{- else }}
+			for i := 0; i < size; i++ {
+				startPos, err = proto.SkipI{{ .bitSize }}(buf[:pos], startPos)
+				if err != nil {
+					return err
+				}
+			}
+	{{- end }}
 			if startPos != pos {
 				return fmt.Errorf("proto: invalid field len = %d for field {{ .fieldName }}", pos - startPos)
 			}
 		case proto.WireTypeI{{ .bitSize }}:
+	{{ if not .lazy -}}
 			var num uint{{ .bitSize }}
 			num, pos, err = proto.ConsumeI{{ .bitSize }}(buf, pos)
 			if err != nil {
 				return err
 			}
 			orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, math.Float{{ .bitSize }}frombits(num))
+	{{- else }}
+			pos, err = proto.SkipI{{ .bitSize }}(buf, pos)
+			if err != nil {
+				return err
+			}
+	{{- end }}
 		default:
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
@@ -47,11 +63,16 @@ const unmarshalProtoFloat = `{{ if .repeated -}}
 		if wireType != proto.WireTypeI{{ .bitSize }} {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+{{ if not .lazy -}}
 		var num uint{{ .bitSize }}
 		num, pos, err = proto.ConsumeI{{ .bitSize }}(buf, pos)
+{{- else}}
+		pos, err = proto.SkipI{{ .bitSize }}(buf, pos)
+{{- end }}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
 		if !UseProtoPooling.IsEnabled() {
@@ -63,7 +84,7 @@ const unmarshalProtoFloat = `{{ if .repeated -}}
 		orig.{{ .oneOfGroup }} = ov
 {{- else }}
 		orig.{{ .fieldName }} = math.Float{{ .bitSize }}frombits(num)
-{{- end }}{{- end }}`
+{{- end }}{{- end }}{{- end }}`
 
 const unmarshalProtoFixed = `{{ if .repeated -}}
 	case {{ .protoFieldID }}:
@@ -76,6 +97,7 @@ const unmarshalProtoFixed = `{{ if .repeated -}}
 			}
 			startPos := pos - length
 			size := length / {{ div .bitSize 8 }}
+	{{ if not .lazy -}}
 			orig.{{ .fieldName }} = make([]{{ .goType }}, size)
 			var num uint{{ .bitSize }}
 			for i := 0; i < size; i++ {
@@ -85,16 +107,31 @@ const unmarshalProtoFixed = `{{ if .repeated -}}
 				}
 				orig.{{ .fieldName }}[i] = {{ .goType }}(num)
 			}
+	{{- else }}
+			for i := 0; i < size; i++ {
+				startPos, err = proto.SkipI{{ .bitSize }}(buf[:pos], startPos)
+				if err != nil {
+					return err
+				}
+			}
+	{{- end }}
 			if startPos != pos {
 				return fmt.Errorf("proto: invalid field len = %d for field {{ .fieldName }}", pos - startPos)
 			}
 		case proto.WireTypeI{{ .bitSize }}:
+	{{ if not .lazy -}}
 			var num uint{{ .bitSize }}
 			num, pos, err = proto.ConsumeI{{ .bitSize }}(buf, pos)
 			if err != nil {
 				return err
 			}
 			orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, {{ .goType }}(num))
+	{{- else }}
+			pos, err = proto.SkipI{{ .bitSize }}(buf, pos)
+			if err != nil {
+				return err
+			}
+	{{- end }}
 		default:
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
@@ -103,11 +140,16 @@ const unmarshalProtoFixed = `{{ if .repeated -}}
 		if wireType != proto.WireTypeI{{ .bitSize }} {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+	{{ if not .lazy -}}
 		var num uint{{ .bitSize }}
 		num, pos, err = proto.ConsumeI{{ .bitSize }}(buf, pos)
+	{{- else }}
+		pos, err = proto.SkipI{{ .bitSize }}(buf, pos)
+	{{- end }}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
 		if !UseProtoPooling.IsEnabled() {
@@ -119,7 +161,7 @@ const unmarshalProtoFixed = `{{ if .repeated -}}
 		orig.{{ .oneOfGroup }} = ov
 {{- else }}
 		orig.{{ .fieldName }} = {{ .goType }}(num)
-{{- end }}{{- end }}`
+{{- end }}{{- end }}{{- end }}`
 
 const unmarshalProtoBool = `{{ if .repeated -}}
 	case {{ .protoFieldID }}:
@@ -131,6 +173,7 @@ const unmarshalProtoBool = `{{ if .repeated -}}
 				return err
 			}
 			startPos := pos - length
+	{{ if not .lazy -}}
 			// Optimistically assume that bools are encoded as 1 byte even in variant form.
 			orig.{{ .fieldName }} = make([]bool, 0, length)
 			var num uint64
@@ -141,16 +184,31 @@ const unmarshalProtoBool = `{{ if .repeated -}}
 				}
 				orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, num != 0)
 			}
+	{{- else }}
+			for startPos < pos {
+				startPos, err = proto.SkipVarint(buf[:pos], startPos)
+				if err != nil {
+					return err
+				}
+			}
+	{{- end }}
 			if startPos != pos {
 				return fmt.Errorf("proto: invalid field len = %d for field {{ .fieldName }}", pos - startPos)
 			}
 		case proto.WireTypeVarint:
+	{{ if not .lazy -}}
 			var num uint64
 			num, pos, err = proto.ConsumeVarint(buf, pos)
 			if err != nil {
 				return err
 			}
 			orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, num != 0)
+	{{- else }}
+			pos, err = proto.SkipVarint(buf, pos)
+			if err != nil {
+				return err
+			}
+	{{- end }}
 		default:
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
@@ -159,11 +217,16 @@ const unmarshalProtoBool = `{{ if .repeated -}}
 		if wireType != proto.WireTypeVarint {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+	{{ if not .lazy -}}
 		var num uint64
 		num, pos, err = proto.ConsumeVarint(buf, pos)
+	{{- else }}
+		pos, err = proto.SkipVarint(buf, pos)
+	{{- end}}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
 		if !UseProtoPooling.IsEnabled() {
@@ -175,7 +238,7 @@ const unmarshalProtoBool = `{{ if .repeated -}}
 		orig.{{ .oneOfGroup }} = ov
 {{- else }}
 		orig.{{ .fieldName }} = num != 0
-{{- end }}{{- end }}`
+{{- end }}{{- end }}{{- end }}`
 
 const unmarshalProtoVarint = `{{ if .repeated -}}
 	case {{ .protoFieldID }}:
@@ -187,6 +250,7 @@ const unmarshalProtoVarint = `{{ if .repeated -}}
 				return err
 			}
 			startPos := pos - length
+	{{ if not .lazy -}}
 			var num uint64
 			for startPos < pos {
 				num, startPos, err = proto.ConsumeVarint(buf[:pos], startPos)
@@ -195,16 +259,31 @@ const unmarshalProtoVarint = `{{ if .repeated -}}
 				}
 				orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, {{ .goType }}(num))
 			}
+	{{- else }}
+			for startPos < pos {
+				startPos, err = proto.SkipVarint(buf[:pos], startPos)
+				if err != nil {
+					return err
+				}
+			}
+	{{- end }}
 			if startPos != pos {
 				return fmt.Errorf("proto: invalid field len = %d for field {{ .fieldName }}", pos - startPos)
 			}
 		case proto.WireTypeVarint:
+	{{ if not .lazy -}}
 			var num uint64
 			num, pos, err = proto.ConsumeVarint(buf, pos)
 			if err != nil {
 				return err
 			}
 			orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, {{ .goType }}(num))
+	{{- else }}
+			pos, err = proto.SkipVarint(buf, pos)
+			if err != nil {
+				return err
+			}
+	{{- end }}
 		default:
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
@@ -213,11 +292,16 @@ const unmarshalProtoVarint = `{{ if .repeated -}}
 		if wireType != proto.WireTypeVarint {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+	{{ if not .lazy -}}
 		var num uint64
 		num, pos, err = proto.ConsumeVarint(buf, pos)
+	{{- else }}
+		pos, err = proto.SkipVarint(buf, pos)
+	{{- end }}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
 		if !UseProtoPooling.IsEnabled() {
@@ -227,20 +311,25 @@ const unmarshalProtoVarint = `{{ if .repeated -}}
 		}
 		ov.{{ .fieldName }} = {{ .goType }}(num)
 		orig.{{ .oneOfGroup }} = ov
-{{- else }}
+	{{- else }}
 		orig.{{ .fieldName }} = {{ .goType }}(num)
-{{- end }}{{- end }}`
+{{- end }}{{- end }}{{- end }}`
 
 const unmarshalProtoString = `
 	case {{ .protoFieldID }}:
 		if wireType != proto.WireTypeLen {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+{{ if not .lazy -}}
 		var length int
 		length, pos, err = proto.ConsumeLen(buf, pos)
+{{- else }}
+		pos, err = proto.SkipLen(buf, pos)
+{{- end }}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 		startPos := pos - length
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
@@ -255,18 +344,23 @@ const unmarshalProtoString = `
 		orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, string(buf[startPos:pos]))
 {{- else -}}
 		orig.{{ .fieldName }} = string(buf[startPos:pos])
-{{- end }}`
+{{- end }}{{- end }}`
 
 const unmarshalProtoBytes = `	
 	case {{ .protoFieldID }}:
 		if wireType != proto.WireTypeLen {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+{{ if not .lazy -}}
 		var length int
 		length, pos, err = proto.ConsumeLen(buf, pos)
+{{- else }}
+		pos, err = proto.SkipLen(buf, pos)
+{{- end }}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 		startPos := pos - length
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
@@ -292,7 +386,7 @@ const unmarshalProtoBytes = `
 			orig.{{ .fieldName }} = make([]byte, length)
 			copy(orig.{{ .fieldName }}, buf[startPos:pos])
 		}
-{{- end }}`
+{{- end }}{{- end }}`
 
 const unmarshalProtoMessage = `
 	case {{ .protoFieldID }}:
@@ -306,6 +400,7 @@ const unmarshalProtoMessage = `
 		}
 		startPos := pos - length
 {{ if ne .oneOfGroup "" -}}
+	{{ if not .lazy -}}
 		var ov *{{ .oneOfMessageName }}
 		if !UseProtoPooling.IsEnabled() {
 			ov = &{{ .oneOfMessageName }}{}
@@ -318,15 +413,29 @@ const unmarshalProtoMessage = `
 			return err
 		}
 		orig.{{ .oneOfGroup }} = ov
+	{{- else }}
+		err = Skip{{ .messageName }}Proto(buf[startPos:pos])
+		if err != nil {
+			return err
+		}
+	{{- end }}
 {{- else if .repeated -}}
+	{{ if not .lazy -}}
 		orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, {{ if .nullable }}New{{ .messageName }}(){{ else }}{{ .defaultValue }}{{ end }})
 		err = orig.{{ .fieldName }}[len(orig.{{ .fieldName }})-1].UnmarshalProtoOpts(buf[startPos:pos], opts)
+	{{- else }}
+		err = Skip{{ .messageName }}Proto(buf[startPos:pos])
+	{{- end }}
 		if err != nil {
 			return err
 		}
 {{- else }}
+	{{ if not .lazy -}}
 		{{ if .nullable }}orig.{{ .fieldName }} = New{{ .messageName }}(){{ end }}
 		err = orig.{{ .fieldName }}.UnmarshalProtoOpts(buf[startPos:pos], opts)
+	{{- else }}
+		err = Skip{{ .messageName }}Proto(buf[startPos:pos])
+	{{- end }}
 		if err != nil {
 			return err
 		}
@@ -342,6 +451,7 @@ const unmarshalProtoSignedVarint = `{{ if .repeated -}}
 				return err
 			}
 			startPos := pos - length
+{{ if not .lazy -}}
 			// Optimistically assume that bools are encoded as 1 byte even in variant form.
 			orig.{{ .fieldName }} = make([]bool, 0, pos - startPos)
 			var num uint64
@@ -352,16 +462,31 @@ const unmarshalProtoSignedVarint = `{{ if .repeated -}}
 				}
 				orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, int{{ .bitSize }}(uint{{ .bitSize }}(num >> 1) ^ uint{{ .bitSize }}(int{{ .bitSize }}((num&1)<<{{ sub .bitSize 1 }})>>{{ sub .bitSize 1 }})))
 			}
+{{- else }}
+			for startPos < pos {
+				num, startPos, err = proto.SkipVarint(buf[:pos], startPos)
+				if err != nil {
+					return err
+				}
+			}
+{{- end }}
 			if startPos != pos {
 				return fmt.Errorf("proto: invalid field len = %d for field {{ .fieldName }}", pos - startPos)
 			}
 		case proto.WireTypeVarint:
+{{ if not .lazy -}}
 			var num uint64
 			num, pos, err = proto.ConsumeVarint(buf, pos)
 			if err != nil {
 				return err
 			}
 			orig.{{ .fieldName }} = append(orig.{{ .fieldName }}, int{{ .bitSize }}(uint{{ .bitSize }}(num >> 1) ^ uint{{ .bitSize }}(int{{ .bitSize }}((num&1)<<{{ sub .bitSize 1 }})>>{{ sub .bitSize 1 }})))
+{{- else }}
+			pos, err = proto.SkipVarint(buf, pos)
+			if err != nil {
+				return err
+			}
+{{- end }}
 		default:
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
@@ -371,11 +496,16 @@ const unmarshalProtoSignedVarint = `{{ if .repeated -}}
 		if wireType != proto.WireTypeVarint {
 			return fmt.Errorf("proto: wrong wireType = %d for field {{ .fieldName }}", wireType)
 		}
+	{{ if not .lazy -}}
 		var num uint64
 		num, pos, err = proto.ConsumeVarint(buf, pos)
+	{{- else }}
+		pos, err = proto.SkipVarint(buf, pos)
+	{{- end }}
 		if err != nil {
 			return err
 		}
+{{ if not .lazy -}}
 {{ if ne .oneOfGroup "" -}}
 		var ov *{{ .oneOfMessageName }}
 		if !UseProtoPooling.IsEnabled() {
@@ -387,10 +517,34 @@ const unmarshalProtoSignedVarint = `{{ if .repeated -}}
 		orig.{{ .oneOfGroup }} = ov
 {{- else }}
 		orig.{{ .fieldName }} = int{{ .bitSize }}(uint{{ .bitSize }}(num >> 1) ^ uint{{ .bitSize }}(int{{ .bitSize }}((num&1)<<{{ sub .bitSize 1 }})>>{{ sub .bitSize 1 }}))
-{{- end }}{{- end }}`
+{{- end }}{{- end }}{{- end }}`
 
 func (pf *Field) GenUnmarshalProto() string {
 	tf := pf.getTemplateFields()
+	switch pf.Type {
+	case TypeDouble, TypeFloat:
+		return template.Execute(template.Parse("unmarshalProtoFloat", []byte(unmarshalProtoFloat)), tf)
+	case TypeFixed64, TypeSFixed64, TypeFixed32, TypeSFixed32:
+		return template.Execute(template.Parse("unmarshalProtoFixed", []byte(unmarshalProtoFixed)), tf)
+	case TypeInt32, TypeInt64, TypeUint32, TypeUint64, TypeEnum:
+		return template.Execute(template.Parse("unmarshalProtoVarint", []byte(unmarshalProtoVarint)), tf)
+	case TypeBool:
+		return template.Execute(template.Parse("unmarshalProtoBool", []byte(unmarshalProtoBool)), tf)
+	case TypeString:
+		return template.Execute(template.Parse("unmarshalProtoString", []byte(unmarshalProtoString)), tf)
+	case TypeBytes:
+		return template.Execute(template.Parse("unmarshalProtoBytes", []byte(unmarshalProtoBytes)), tf)
+	case TypeMessage:
+		return template.Execute(template.Parse("unmarshalProtoMessage", []byte(unmarshalProtoMessage)), tf)
+	case TypeSInt32, TypeSInt64:
+		return template.Execute(template.Parse("unmarshalProtoSignedVarint", []byte(unmarshalProtoSignedVarint)), tf)
+	}
+	panic(fmt.Sprintf("unhandled case %T", pf.Type))
+}
+
+func (pf *Field) GenSkipProto() string {
+	tf := pf.getTemplateFields()
+	tf["lazy"] = true
 	switch pf.Type {
 	case TypeDouble, TypeFloat:
 		return template.Execute(template.Parse("unmarshalProtoFloat", []byte(unmarshalProtoFloat)), tf)
