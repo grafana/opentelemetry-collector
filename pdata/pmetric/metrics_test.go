@@ -19,6 +19,16 @@ const (
 	endTime   = uint64(12578940000000054321)
 )
 
+func createMetrics(metrics []*internal.Metric) []*internal.LazyMetric {
+	results := make([]*internal.LazyMetric, len(metrics))
+	for idx, metric := range metrics {
+		results[idx] = &internal.LazyMetric{
+			Metric: *metric,
+		}
+	}
+	return results
+}
+
 func TestMetricCount(t *testing.T) {
 	md := NewMetrics()
 	assert.Equal(t, 0, md.MetricCount())
@@ -152,7 +162,7 @@ func TestOtlpToInternalReadOnly(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -240,7 +250,7 @@ func TestOtlpToFromInternalReadOnly(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -254,7 +264,7 @@ func TestOtlpToFromInternalReadOnly(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -272,7 +282,7 @@ func TestOtlpToFromInternalGaugeMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoGaugeMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoGaugeMetric()}),
 					},
 				},
 			},
@@ -311,7 +321,7 @@ func TestOtlpToFromInternalGaugeMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope: generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{
+						Metrics: createMetrics([]*internal.Metric{
 							{
 								Name:        "new_my_metric_int",
 								Description: "My new metric",
@@ -336,7 +346,7 @@ func TestOtlpToFromInternalGaugeMutating(t *testing.T) {
 									},
 								},
 							},
-						},
+						}),
 					},
 				},
 			},
@@ -354,7 +364,7 @@ func TestOtlpToFromInternalSumMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoSumMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoSumMetric()}),
 					},
 				},
 			},
@@ -394,7 +404,7 @@ func TestOtlpToFromInternalSumMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope: generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{
+						Metrics: createMetrics([]*internal.Metric{
 							{
 								Name:        "new_my_metric_double",
 								Description: "My new metric",
@@ -420,7 +430,7 @@ func TestOtlpToFromInternalSumMutating(t *testing.T) {
 									},
 								},
 							},
-						},
+						}),
 					},
 				},
 			},
@@ -438,7 +448,7 @@ func TestOtlpToFromInternalHistogramMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -478,7 +488,7 @@ func TestOtlpToFromInternalHistogramMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope: generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{
+						Metrics: createMetrics([]*internal.Metric{
 							{
 								Name:        "new_my_metric_histogram",
 								Description: "My new metric",
@@ -503,7 +513,7 @@ func TestOtlpToFromInternalHistogramMutating(t *testing.T) {
 									},
 								},
 							},
-						},
+						}),
 					},
 				},
 			},
@@ -521,7 +531,7 @@ func TestOtlpToFromInternalExponentialHistogramMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -558,7 +568,7 @@ func TestOtlpToFromInternalExponentialHistogramMutating(t *testing.T) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope: generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{
+						Metrics: createMetrics([]*internal.Metric{
 							{
 								Name:        "new_my_metric_exponential_histogram",
 								Description: "My new metric",
@@ -581,7 +591,7 @@ func TestOtlpToFromInternalExponentialHistogramMutating(t *testing.T) {
 									},
 								},
 							},
-						},
+						}),
 					},
 				},
 			},
@@ -614,7 +624,7 @@ func BenchmarkOtlpToFromInternal_PassThrough(b *testing.B) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoGaugeMetric(), generateTestProtoSumMetric(), generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -639,7 +649,7 @@ func BenchmarkOtlpToFromInternal_Gauge_MutateOneLabel(b *testing.B) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoGaugeMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoGaugeMetric()}),
 					},
 				},
 			},
@@ -666,7 +676,7 @@ func BenchmarkOtlpToFromInternal_Sum_MutateOneLabel(b *testing.B) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoSumMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoSumMetric()}),
 					},
 				},
 			},
@@ -693,7 +703,7 @@ func BenchmarkOtlpToFromInternal_HistogramPoints_MutateOneLabel(b *testing.B) {
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
 						Scope:   generateTestProtoInstrumentationScope(),
-						Metrics: []*internal.Metric{generateTestProtoHistogramMetric()},
+						Metrics: createMetrics([]*internal.Metric{generateTestProtoHistogramMetric()}),
 					},
 				},
 			},
@@ -872,7 +882,7 @@ func generateMetricsEmptyMetrics() Metrics {
 			{
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
-						Metrics: []*internal.Metric{{}},
+						Metrics: createMetrics([]*internal.Metric{{}}),
 					},
 				},
 			},
@@ -886,7 +896,7 @@ func generateMetricsEmptyDataPoints() Metrics {
 			{
 				ScopeMetrics: []*internal.ScopeMetrics{
 					{
-						Metrics: []*internal.Metric{
+						Metrics: createMetrics([]*internal.Metric{
 							{
 								Data: &internal.Metric_Gauge{
 									Gauge: &internal.Gauge{
@@ -896,7 +906,7 @@ func generateMetricsEmptyDataPoints() Metrics {
 									},
 								},
 							},
-						},
+						}),
 					},
 				},
 			},
