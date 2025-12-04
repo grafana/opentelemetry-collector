@@ -72,6 +72,19 @@ func (es {{ .structName }}) At(i int) {{ .elementName }} {
 }
 {{- end }}
 
+func (es {{ .structName }}) Get(i int) ({{ .elementName }}, error) {
+{{ if not .lazy -}}
+	return new{{ .elementName }}({{ if not .elementNullable }}&{{ end }}(*es.{{ .origAccessor }})[i], es.{{ .stateAccessor }}), nil
+{{- else -}}
+	var buf internal.{{ .elementOriginName }}
+	res, err := (*es.{{ .origAccessor }})[i].FinishUnmarshal(&buf.{{ .elementName }})
+	if err != nil {
+		return New{{ .elementName }}(), err
+	}
+	return new{{ .elementName }}(res, es.{{ .stateAccessor }}), nil
+{{- end }}
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {
