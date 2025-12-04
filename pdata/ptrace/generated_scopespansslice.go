@@ -55,6 +55,10 @@ func (es ScopeSpansSlice) At(i int) ScopeSpans {
 	return newScopeSpans((*es.orig)[i], es.state)
 }
 
+func (es ScopeSpansSlice) Get(i int) (ScopeSpans, error) {
+	return newScopeSpans((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

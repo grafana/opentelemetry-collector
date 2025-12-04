@@ -55,6 +55,10 @@ func (es ExponentialHistogramDataPointSlice) At(i int) ExponentialHistogramDataP
 	return newExponentialHistogramDataPoint((*es.orig)[i], es.state)
 }
 
+func (es ExponentialHistogramDataPointSlice) Get(i int) (ExponentialHistogramDataPoint, error) {
+	return newExponentialHistogramDataPoint((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

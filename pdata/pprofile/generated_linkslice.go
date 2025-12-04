@@ -55,6 +55,10 @@ func (es LinkSlice) At(i int) Link {
 	return newLink((*es.orig)[i], es.state)
 }
 
+func (es LinkSlice) Get(i int) (Link, error) {
+	return newLink((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

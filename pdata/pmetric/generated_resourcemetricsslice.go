@@ -55,6 +55,10 @@ func (es ResourceMetricsSlice) At(i int) ResourceMetrics {
 	return newResourceMetrics((*es.orig)[i], es.state)
 }
 
+func (es ResourceMetricsSlice) Get(i int) (ResourceMetrics, error) {
+	return newResourceMetrics((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

@@ -55,6 +55,10 @@ func (es SpanLinkSlice) At(i int) SpanLink {
 	return newSpanLink((*es.orig)[i], es.state)
 }
 
+func (es SpanLinkSlice) Get(i int) (SpanLink, error) {
+	return newSpanLink((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

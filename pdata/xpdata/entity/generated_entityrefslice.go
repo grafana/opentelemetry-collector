@@ -52,6 +52,10 @@ func (es EntityRefSlice) At(i int) EntityRef {
 	return newEntityRef((*es.getOrig())[i], es.getState())
 }
 
+func (es EntityRefSlice) Get(i int) (EntityRef, error) {
+	return newEntityRef((*es.getOrig())[i], es.getState()), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

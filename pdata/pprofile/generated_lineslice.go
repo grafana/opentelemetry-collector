@@ -55,6 +55,10 @@ func (es LineSlice) At(i int) Line {
 	return newLine((*es.orig)[i], es.state)
 }
 
+func (es LineSlice) Get(i int) (Line, error) {
+	return newLine((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

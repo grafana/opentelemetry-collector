@@ -60,6 +60,15 @@ func (es MetricSlice) At(i int) Metric {
 	return newMetric(res, es.state)
 }
 
+func (es MetricSlice) Get(i int) (Metric, error) {
+	var buf internal.LazyMetric
+	res, err := (*es.orig)[i].FinishUnmarshal(&buf.Metric)
+	if err != nil {
+		return NewMetric(), err
+	}
+	return newMetric(res, es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

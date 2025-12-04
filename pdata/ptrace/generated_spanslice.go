@@ -55,6 +55,10 @@ func (es SpanSlice) At(i int) Span {
 	return newSpan((*es.orig)[i], es.state)
 }
 
+func (es SpanSlice) Get(i int) (Span, error) {
+	return newSpan((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

@@ -55,6 +55,10 @@ func (es ScopeProfilesSlice) At(i int) ScopeProfiles {
 	return newScopeProfiles((*es.orig)[i], es.state)
 }
 
+func (es ScopeProfilesSlice) Get(i int) (ScopeProfiles, error) {
+	return newScopeProfiles((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

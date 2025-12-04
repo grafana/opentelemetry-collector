@@ -55,6 +55,10 @@ func (es ValueTypeSlice) At(i int) ValueType {
 	return newValueType((*es.orig)[i], es.state)
 }
 
+func (es ValueTypeSlice) Get(i int) (ValueType, error) {
+	return newValueType((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

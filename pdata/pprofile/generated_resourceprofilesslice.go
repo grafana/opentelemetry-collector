@@ -55,6 +55,10 @@ func (es ResourceProfilesSlice) At(i int) ResourceProfiles {
 	return newResourceProfiles((*es.orig)[i], es.state)
 }
 
+func (es ResourceProfilesSlice) Get(i int) (ResourceProfiles, error) {
+	return newResourceProfiles((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

@@ -55,6 +55,10 @@ func (es ResourceSpansSlice) At(i int) ResourceSpans {
 	return newResourceSpans((*es.orig)[i], es.state)
 }
 
+func (es ResourceSpansSlice) Get(i int) (ResourceSpans, error) {
+	return newResourceSpans((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

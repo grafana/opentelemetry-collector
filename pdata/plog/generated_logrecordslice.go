@@ -55,6 +55,10 @@ func (es LogRecordSlice) At(i int) LogRecord {
 	return newLogRecord((*es.orig)[i], es.state)
 }
 
+func (es LogRecordSlice) Get(i int) (LogRecord, error) {
+	return newLogRecord((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

@@ -55,6 +55,10 @@ func (es SampleSlice) At(i int) Sample {
 	return newSample((*es.orig)[i], es.state)
 }
 
+func (es SampleSlice) Get(i int) (Sample, error) {
+	return newSample((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

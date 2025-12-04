@@ -51,6 +51,10 @@ func (es Slice) At(i int) Value {
 	return newValue(&(*es.getOrig())[i], es.getState())
 }
 
+func (es Slice) Get(i int) (Value, error) {
+	return newValue(&(*es.getOrig())[i], es.getState()), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

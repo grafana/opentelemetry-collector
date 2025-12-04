@@ -55,6 +55,10 @@ func (es MappingSlice) At(i int) Mapping {
 	return newMapping((*es.orig)[i], es.state)
 }
 
+func (es MappingSlice) Get(i int) (Mapping, error) {
+	return newMapping((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

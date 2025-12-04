@@ -55,6 +55,10 @@ func (es StackSlice) At(i int) Stack {
 	return newStack((*es.orig)[i], es.state)
 }
 
+func (es StackSlice) Get(i int) (Stack, error) {
+	return newStack((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

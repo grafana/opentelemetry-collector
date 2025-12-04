@@ -55,6 +55,10 @@ func (es NumberDataPointSlice) At(i int) NumberDataPoint {
 	return newNumberDataPoint((*es.orig)[i], es.state)
 }
 
+func (es NumberDataPointSlice) Get(i int) (NumberDataPoint, error) {
+	return newNumberDataPoint((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

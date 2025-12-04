@@ -55,6 +55,10 @@ func (es ScopeLogsSlice) At(i int) ScopeLogs {
 	return newScopeLogs((*es.orig)[i], es.state)
 }
 
+func (es ScopeLogsSlice) Get(i int) (ScopeLogs, error) {
+	return newScopeLogs((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

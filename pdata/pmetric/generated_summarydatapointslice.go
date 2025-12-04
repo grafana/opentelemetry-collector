@@ -55,6 +55,10 @@ func (es SummaryDataPointSlice) At(i int) SummaryDataPoint {
 	return newSummaryDataPoint((*es.orig)[i], es.state)
 }
 
+func (es SummaryDataPointSlice) Get(i int) (SummaryDataPoint, error) {
+	return newSummaryDataPoint((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {

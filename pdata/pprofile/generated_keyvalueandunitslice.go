@@ -55,6 +55,10 @@ func (es KeyValueAndUnitSlice) At(i int) KeyValueAndUnit {
 	return newKeyValueAndUnit((*es.orig)[i], es.state)
 }
 
+func (es KeyValueAndUnitSlice) Get(i int) (KeyValueAndUnit, error) {
+	return newKeyValueAndUnit((*es.orig)[i], es.state), nil
+}
+
 // All returns an iterator over index-value pairs in the slice.
 //
 //	for i, v := range es.All() {
