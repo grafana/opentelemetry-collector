@@ -137,9 +137,11 @@ func (p *Package) GenerateProtoMessageFiles() error {
 		if err := os.WriteFile(path, pm.GenerateMessage(p.info.imports, p.info.testImports), 0o600); err != nil {
 			return err
 		}
-		path = filepath.Join("pdata", "internal", "generated_proto_lazy"+strings.ToLower(s.getOriginName())+".go")
-		if err := os.WriteFile(path, pm.GenerateLazyMessage(p.info.imports, p.info.testImports), 0o600); err != nil {
-			return err
+		if s.getShouldGenerateLazyProto() {
+			path = filepath.Join("pdata", "internal", "generated_proto_lazy"+strings.ToLower(s.getOriginName())+".go")
+			if err := os.WriteFile(path, pm.GenerateLazyMessage(p.info.imports, p.info.testImports), 0o600); err != nil {
+				return err
+			}
 		}
 		p.info.testImports = saveTestImports
 	}

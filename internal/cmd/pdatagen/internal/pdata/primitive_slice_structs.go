@@ -59,6 +59,10 @@ func (iss *primitiveSliceStruct) getHasOnlyInternal() bool {
 	return false
 }
 
+func (iss *primitiveSliceStruct) getShouldGenerateLazyProto() bool {
+	return false
+}
+
 func (iss *primitiveSliceStruct) getElementOriginName() string {
 	return upperFirst(iss.itemType)
 }

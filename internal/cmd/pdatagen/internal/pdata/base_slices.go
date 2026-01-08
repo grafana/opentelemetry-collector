@@ -83,6 +83,10 @@ func (ss *messageSlice) getHasOnlyInternal() bool {
 	return false
 }
 
+func (ss *messageSlice) getShouldGenerateLazyProto() bool {
+	return false
+}
+
 func (ss *messageSlice) getElementOriginName() string {
 	if ss.lazy {
 		return "Lazy"+ss.element.getOriginName()

@@ -14,6 +14,7 @@ type baseStruct interface {
 	getOriginFullName() string
 	getHasWrapper() bool
 	getHasOnlyInternal() bool
+	getShouldGenerateLazyProto() bool
 	generate(packageInfo *PackageInfo) []byte
 	generateTests(packageInfo *PackageInfo) []byte
 	generateInternal(packageInfo *PackageInfo) []byte
@@ -32,6 +33,7 @@ type messageStruct struct {
 	fields          []Field
 	hasWrapper      bool
 	hasOnlyInternal bool
+	generateLazy    bool
 }
 
 func (ms *messageStruct) getName() string {
@@ -96,6 +98,10 @@ func (ms *messageStruct) getHasWrapper() bool {
 
 func (ms *messageStruct) getHasOnlyInternal() bool {
 	return ms.hasOnlyInternal
+}
+
+func (ms *messageStruct) getShouldGenerateLazyProto() bool {
+	return ms.generateLazy
 }
 
 func (ms *messageStruct) getOriginName() string {

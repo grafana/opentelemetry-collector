@@ -244,6 +244,7 @@ var metric = &messageStruct{
 			returnSlice: mapStruct,
 		},
 	},
+	generateLazy: true,
 }
 
 var gauge = &messageStruct{
