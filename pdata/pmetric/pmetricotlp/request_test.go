@@ -93,3 +93,45 @@ func TestMetricsProtoWireCompatibility(t *testing.T) {
 	otlp.MigrateMetrics(md.orig.ResourceMetrics)
 	assert.Equal(t, md, md2)
 }
+
+func TestMetricsProtoLazyCompatibility(t *testing.T) {
+	// This test verifies the compatibility between lazy and non-lazy deserialization.
+
+	// Generate Metrics as pdata struct.
+	md := NewExportRequestFromMetrics(pmetric.Metrics(internal.GenTestMetricsWrapper()))
+
+	// Marshal its underlying ProtoBuf to wire.
+	wire, err := md.MarshalProto()
+	require.NoError(t, err)
+	assert.NotNil(t, wire)
+
+	// Unmarshal using the non-lazy approach
+	md1 := NewExportRequest()
+	err = md1.UnmarshalProto(wire)
+	require.NoError(t, err)
+
+	// Unmarshal using the lazy approach
+	md2 := NewExportRequest()
+	err = md2.UnmarshalProtoLazy(wire)
+	require.NoError(t, err)
+
+	// Now compare that both deserialization produced the same result.
+	rms1 := md1.Metrics().ResourceMetrics()
+	rms2 := md2.Metrics().ResourceMetrics()
+	require.Equal(t, rms1.Len(), rms2.Len())
+	for i := range rms1.Len() {
+		sms1 := rms1.At(i).ScopeMetrics()
+		sms2 := rms2.At(i).ScopeMetrics()
+		require.Equal(t, sms1.Len(), sms2.Len())
+		for j := range sms1.Len() {
+			sm1 := sms1.At(j).Metrics()
+			sm2 := sms2.At(j).Metrics()
+			require.Equal(t, sm1.Len(), sm2.Len())
+			for k := range sm1.Len() {
+				m1 := sm1.At(k)
+				m2 := sm2.At(k)
+				require.Equal(t, m1, m2)
+			}
+		}
+	}
+}
