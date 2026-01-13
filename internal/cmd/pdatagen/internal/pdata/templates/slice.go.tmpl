@@ -63,21 +63,27 @@ func (es {{ .structName }}) At(i int) {{ .elementName }} {
 }
 {{- else -}}
 func (es {{ .structName }}) At(i int) {{ .elementName }} {
-	res, err := (*es.{{ .origAccessor }})[i].FinishUnmarshal(&(*es.{{ .origAccessor }})[i].{{ .elementName }})
-	if err != nil {
-		return New{{ .elementName }}()
+	dst := &(*es.{{ .origAccessor }})[i].{{ .elementName }}
+	if !(*es.{{ .origAccessor }})[i].IsUnmarshalled() {
+		if err := (*es.{{ .origAccessor }})[i].FinishUnmarshal(dst); err != nil {
+			return New{{ .elementName }}()
+		}
 	}
-	return new{{ .elementName }}(res, es.{{ .stateAccessor }})
+	return new{{ .elementName }}(dst, es.{{ .stateAccessor }})
 }
 
-func (es {{ .structName }}) Unmarshal(i int, m *{{ .elementName }}) error {
-	var buf internal.{{ .elementOriginName }}
-	res, err := (*es.{{ .origAccessor }})[i].FinishUnmarshal(&buf.{{ .elementName }})
-	if err != nil {
-		return err
+func (es {{ .structName }}) Unmarshal(i int, m *{{ .elementName }}) (bool, error) {
+	if !(*es.{{ .origAccessor }})[i].IsUnmarshalled() {
+		var buf internal.{{ .elementName }}
+		if err := (*es.{{ .origAccessor }})[i].FinishUnmarshal(&buf); err != nil {
+			return false, err
+		}
+		*m = new{{ .elementName }}(&buf, es.{{ .stateAccessor }})
+		return true, nil
+	} else {
+		*m = new{{ .elementName }}(&(*es.{{ .origAccessor }})[i].{{ .elementName }}, es.{{ .stateAccessor }})
+		return false, nil
 	}
-	*m = new{{ .elementName }}(res, es.{{ .stateAccessor }})
-	return nil
 }
 {{- end }}
 

@@ -163,12 +163,12 @@ func SkipLazy{{ .messageName }}Proto(buf []byte) error {
     return Skip{{ .messageName }}Proto(buf)
 }
 
-func (orig *Lazy{{ .messageName }}) FinishUnmarshal(buf *{{ .messageName }}) (*{{ .messageName }}, error) {
-    if len(orig.bytes) == 0 {
-        return &orig.{{ .messageName }}, nil
-    }
-    err := buf.UnmarshalProto(orig.bytes)
-    return buf, err
+func (orig *Lazy{{ .messageName }}) IsUnmarshalled() bool {
+    return len(orig.bytes) == 0
+}
+
+func (orig *Lazy{{ .messageName }}) FinishUnmarshal(buf *{{ .messageName }}) error {
+    return buf.UnmarshalProto(orig.bytes)
 }
 
 func GenTestLazy{{ .messageName }}() *Lazy{{ .messageName }} {

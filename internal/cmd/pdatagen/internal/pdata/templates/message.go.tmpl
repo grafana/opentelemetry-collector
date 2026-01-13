@@ -57,6 +57,11 @@ func (ms {{ .structName }}) MoveTo(dest {{ .structName }}) {
 	*dest.{{ .origAccessor }}, *ms.{{ .origAccessor }} = *ms.{{ .origAccessor }}, *dest.{{ .origAccessor }}
 }
 
+func (ms {{ .structName }}) ReturnToPool() {
+	ms.{{ .stateAccessor }}.AssertMutable()
+	internal.Delete{{ .originName }}(ms.{{ .origAccessor }}, true)
+}
+
 {{ range .fields -}}
 {{ .GenerateAccessors $.messageStruct }}
 {{ end }}
