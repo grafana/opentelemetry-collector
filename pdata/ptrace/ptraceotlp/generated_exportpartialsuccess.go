@@ -47,6 +47,11 @@ func (ms ExportPartialSuccess) MoveTo(dest ExportPartialSuccess) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ExportPartialSuccess) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteExportTracePartialSuccess(ms.orig, true)
+}
+
 // RejectedSpans returns the rejectedspans associated with this ExportPartialSuccess.
 func (ms ExportPartialSuccess) RejectedSpans() int64 {
 	return ms.orig.RejectedSpans

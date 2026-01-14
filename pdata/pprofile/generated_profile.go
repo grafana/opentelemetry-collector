@@ -48,6 +48,11 @@ func (ms Profile) MoveTo(dest Profile) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Profile) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteProfile(ms.orig, true)
+}
+
 // SampleType returns the sampletype associated with this Profile.
 func (ms Profile) SampleType() ValueType {
 	return newValueType(&ms.orig.SampleType, ms.state)

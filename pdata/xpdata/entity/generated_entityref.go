@@ -43,6 +43,11 @@ func (ms EntityRef) MoveTo(dest EntityRef) {
 	*dest.getOrig(), *ms.getOrig() = *ms.getOrig(), *dest.getOrig()
 }
 
+func (ms EntityRef) ReturnToPool() {
+	ms.getState().AssertMutable()
+	internal.DeleteEntityRef(ms.getOrig(), true)
+}
+
 // SchemaUrl returns the schemaurl associated with this EntityRef.
 func (ms EntityRef) SchemaUrl() string {
 	return ms.getOrig().SchemaUrl

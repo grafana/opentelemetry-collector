@@ -47,6 +47,11 @@ func (ms ExportPartialSuccess) MoveTo(dest ExportPartialSuccess) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ExportPartialSuccess) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteExportProfilesPartialSuccess(ms.orig, true)
+}
+
 // RejectedProfiles returns the rejectedprofiles associated with this ExportPartialSuccess.
 func (ms ExportPartialSuccess) RejectedProfiles() int64 {
 	return ms.orig.RejectedProfiles

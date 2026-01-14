@@ -48,6 +48,11 @@ func (ms ProfilesDictionary) MoveTo(dest ProfilesDictionary) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ProfilesDictionary) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteProfilesDictionary(ms.orig, true)
+}
+
 // MappingTable returns the MappingTable associated with this ProfilesDictionary.
 func (ms ProfilesDictionary) MappingTable() MappingSlice {
 	return newMappingSlice(&ms.orig.MappingTable, ms.state)

@@ -48,6 +48,11 @@ func (ms Stack) MoveTo(dest Stack) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Stack) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteStack(ms.orig, true)
+}
+
 // LocationIndices returns the LocationIndices associated with this Stack.
 func (ms Stack) LocationIndices() pcommon.Int32Slice {
 	return pcommon.Int32Slice(internal.NewInt32SliceWrapper(&ms.orig.LocationIndices, ms.state))

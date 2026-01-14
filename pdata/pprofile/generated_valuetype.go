@@ -47,6 +47,11 @@ func (ms ValueType) MoveTo(dest ValueType) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ValueType) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteValueType(ms.orig, true)
+}
+
 // TypeStrindex returns the typestrindex associated with this ValueType.
 func (ms ValueType) TypeStrindex() int32 {
 	return ms.orig.TypeStrindex

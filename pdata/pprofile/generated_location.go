@@ -48,6 +48,11 @@ func (ms Location) MoveTo(dest Location) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Location) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteLocation(ms.orig, true)
+}
+
 // MappingIndex returns the mappingindex associated with this Location.
 func (ms Location) MappingIndex() int32 {
 	return ms.orig.MappingIndex

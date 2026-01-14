@@ -46,6 +46,11 @@ func (ms ProfilesData) MoveTo(dest ProfilesData) {
 	*dest.getOrig(), *ms.getOrig() = *ms.getOrig(), *dest.getOrig()
 }
 
+func (ms ProfilesData) ReturnToPool() {
+	ms.getState().AssertMutable()
+	internal.DeleteProfilesData(ms.getOrig(), true)
+}
+
 // ResourceProfiles returns the ResourceProfiles associated with this ProfilesData.
 func (ms ProfilesData) ResourceProfiles() ResourceProfilesSlice {
 	return newResourceProfilesSlice(&ms.getOrig().ResourceProfiles, ms.getState())

@@ -48,6 +48,11 @@ func (ms NumberDataPoint) MoveTo(dest NumberDataPoint) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms NumberDataPoint) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteNumberDataPoint(ms.orig, true)
+}
+
 // Attributes returns the Attributes associated with this NumberDataPoint.
 func (ms NumberDataPoint) Attributes() pcommon.Map {
 	return pcommon.Map(internal.NewMapWrapper(&ms.orig.Attributes, ms.state))

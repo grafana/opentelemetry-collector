@@ -48,6 +48,11 @@ func (ms Link) MoveTo(dest Link) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Link) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteLink(ms.orig, true)
+}
+
 // TraceID returns the traceid associated with this Link.
 func (ms Link) TraceID() pcommon.TraceID {
 	return pcommon.TraceID(ms.orig.TraceId)

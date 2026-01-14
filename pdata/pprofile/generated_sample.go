@@ -48,6 +48,11 @@ func (ms Sample) MoveTo(dest Sample) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Sample) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteSample(ms.orig, true)
+}
+
 // StackIndex returns the stackindex associated with this Sample.
 func (ms Sample) StackIndex() int32 {
 	return ms.orig.StackIndex

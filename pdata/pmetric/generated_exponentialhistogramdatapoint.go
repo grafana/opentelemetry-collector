@@ -51,6 +51,11 @@ func (ms ExponentialHistogramDataPoint) MoveTo(dest ExponentialHistogramDataPoin
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ExponentialHistogramDataPoint) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteExponentialHistogramDataPoint(ms.orig, true)
+}
+
 // Attributes returns the Attributes associated with this ExponentialHistogramDataPoint.
 func (ms ExponentialHistogramDataPoint) Attributes() pcommon.Map {
 	return pcommon.Map(internal.NewMapWrapper(&ms.orig.Attributes, ms.state))

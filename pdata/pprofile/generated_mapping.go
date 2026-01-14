@@ -48,6 +48,11 @@ func (ms Mapping) MoveTo(dest Mapping) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Mapping) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteMapping(ms.orig, true)
+}
+
 // MemoryStart returns the memorystart associated with this Mapping.
 func (ms Mapping) MemoryStart() uint64 {
 	return ms.orig.MemoryStart

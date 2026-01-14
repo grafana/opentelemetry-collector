@@ -47,6 +47,11 @@ func (ms Function) MoveTo(dest Function) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Function) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteFunction(ms.orig, true)
+}
+
 // NameStrindex returns the namestrindex associated with this Function.
 func (ms Function) NameStrindex() int32 {
 	return ms.orig.NameStrindex

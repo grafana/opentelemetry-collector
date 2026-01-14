@@ -50,6 +50,11 @@ func (ms KeyValueAndUnit) MoveTo(dest KeyValueAndUnit) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms KeyValueAndUnit) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteKeyValueAndUnit(ms.orig, true)
+}
+
 // KeyStrindex returns the keystrindex associated with this KeyValueAndUnit.
 func (ms KeyValueAndUnit) KeyStrindex() int32 {
 	return ms.orig.KeyStrindex

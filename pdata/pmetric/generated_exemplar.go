@@ -51,6 +51,11 @@ func (ms Exemplar) MoveTo(dest Exemplar) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Exemplar) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteExemplar(ms.orig, true)
+}
+
 // FilteredAttributes returns the FilteredAttributes associated with this Exemplar.
 func (ms Exemplar) FilteredAttributes() pcommon.Map {
 	return pcommon.Map(internal.NewMapWrapper(&ms.orig.FilteredAttributes, ms.state))

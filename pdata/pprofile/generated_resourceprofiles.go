@@ -48,6 +48,11 @@ func (ms ResourceProfiles) MoveTo(dest ResourceProfiles) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ResourceProfiles) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteResourceProfiles(ms.orig, true)
+}
+
 // Resource returns the resource associated with this ResourceProfiles.
 func (ms ResourceProfiles) Resource() pcommon.Resource {
 	return pcommon.Resource(internal.NewResourceWrapper(&ms.orig.Resource, ms.state))

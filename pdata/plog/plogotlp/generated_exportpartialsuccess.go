@@ -47,6 +47,11 @@ func (ms ExportPartialSuccess) MoveTo(dest ExportPartialSuccess) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms ExportPartialSuccess) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteExportLogsPartialSuccess(ms.orig, true)
+}
+
 // RejectedLogRecords returns the rejectedlogrecords associated with this ExportPartialSuccess.
 func (ms ExportPartialSuccess) RejectedLogRecords() int64 {
 	return ms.orig.RejectedLogRecords

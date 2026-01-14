@@ -48,6 +48,11 @@ func (ms HistogramDataPoint) MoveTo(dest HistogramDataPoint) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms HistogramDataPoint) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteHistogramDataPoint(ms.orig, true)
+}
+
 // Attributes returns the Attributes associated with this HistogramDataPoint.
 func (ms HistogramDataPoint) Attributes() pcommon.Map {
 	return pcommon.Map(internal.NewMapWrapper(&ms.orig.Attributes, ms.state))

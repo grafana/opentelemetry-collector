@@ -49,6 +49,11 @@ func (ms Metric) MoveTo(dest Metric) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Metric) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteMetric(ms.orig, true)
+}
+
 // Name returns the name associated with this Metric.
 func (ms Metric) Name() string {
 	return ms.orig.Name

@@ -47,6 +47,11 @@ func (ms Line) MoveTo(dest Line) {
 	*dest.orig, *ms.orig = *ms.orig, *dest.orig
 }
 
+func (ms Line) ReturnToPool() {
+	ms.state.AssertMutable()
+	internal.DeleteLine(ms.orig, true)
+}
+
 // FunctionIndex returns the functionindex associated with this Line.
 func (ms Line) FunctionIndex() int32 {
 	return ms.orig.FunctionIndex
