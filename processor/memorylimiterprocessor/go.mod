@@ -22,10 +22,10 @@ require (
 	go.opentelemetry.io/collector/processor/processorhelper/xprocessorhelper v0.143.0
 	go.opentelemetry.io/collector/processor/processortest v0.143.0
 	go.opentelemetry.io/collector/processor/xprocessor v0.143.0
-	go.opentelemetry.io/otel v1.39.0
-	go.opentelemetry.io/otel/metric v1.39.0
+	go.opentelemetry.io/otel v1.41.0
+	go.opentelemetry.io/otel/metric v1.41.0
 	go.opentelemetry.io/otel/sdk/metric v1.39.0
-	go.opentelemetry.io/otel/trace v1.39.0
+	go.opentelemetry.io/otel/trace v1.41.0
 	go.uber.org/goleak v1.3.0
 )
 
