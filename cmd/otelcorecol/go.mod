@@ -2,7 +2,7 @@
 
 module go.opentelemetry.io/collector/cmd/otelcorecol
 
-go 1.24.0
+go 1.25.0
 
 require (
 	go.opentelemetry.io/collector/component v1.49.0
@@ -30,7 +30,7 @@ require (
 	go.opentelemetry.io/collector/receiver/nopreceiver v0.143.0
 	go.opentelemetry.io/collector/receiver/otlpreceiver v0.143.0
 	go.opentelemetry.io/collector/service v0.143.0
-	golang.org/x/sys v0.39.0
+	golang.org/x/sys v0.44.0
 )
 
 require (
