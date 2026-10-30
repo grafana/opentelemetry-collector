@@ -1,6 +1,6 @@
 module go.opentelemetry.io/collector/scraper/scraperhelper/xscraperhelper
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/stretchr/testify v1.11.1
@@ -46,7 +46,7 @@ require (
 	go.opentelemetry.io/collector/pipeline v1.49.0 // indirect
 	go.opentelemetry.io/collector/receiver/receiverhelper v0.143.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.39.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251222181119-0a764e51fe1b // indirect
 	google.golang.org/grpc v1.78.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
