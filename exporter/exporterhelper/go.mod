@@ -1,6 +1,6 @@
 module go.opentelemetry.io/collector/exporter/exporterhelper
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/cenkalti/backoff/v5 v5.0.3
@@ -64,7 +64,7 @@ require (
 	go.opentelemetry.io/collector/receiver/receivertest v0.143.0 // indirect
 	go.opentelemetry.io/collector/receiver/xreceiver v0.143.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251222181119-0a764e51fe1b // indirect
 	google.golang.org/grpc v1.78.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
