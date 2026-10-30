@@ -1,6 +1,6 @@
 module go.opentelemetry.io/collector/internal/tools
 
-go 1.24.0
+go 1.25.0
 
 tool (
 	github.com/a8m/envsubst/cmd/envsubst
@@ -276,7 +276,7 @@ require (
 	golang.org/x/mod v0.31.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	golang.org/x/telemetry v0.0.0-20251203150158-8fff8a5912fc // indirect
 	golang.org/x/term v0.38.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
