@@ -1,6 +1,6 @@
 module go.opentelemetry.io/collector/scraper/scrapertest
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/google/uuid v1.6.0
@@ -28,7 +28,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.1 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 )
 
 replace go.opentelemetry.io/collector/component/componenttest => ../../component/componenttest
