@@ -1,6 +1,6 @@
 module go.opentelemetry.io/collector/extension/extensionauth/extensionauthtest
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/stretchr/testify v1.11.1
@@ -8,7 +8,7 @@ require (
 	go.opentelemetry.io/collector/extension v1.49.0
 	go.opentelemetry.io/collector/extension/extensionauth v1.49.0
 	go.uber.org/goleak v1.3.0
-	google.golang.org/grpc v1.78.0
+	google.golang.org/grpc v1.83.1
 )
 
 require (
@@ -22,9 +22,9 @@ require (
 	go.opentelemetry.io/collector/featuregate v1.49.0 // indirect
 	go.opentelemetry.io/collector/internal/componentalias v0.0.0-00010101000000-000000000000 // indirect
 	go.opentelemetry.io/collector/pdata v1.49.0 // indirect
-	go.opentelemetry.io/otel v1.39.0 // indirect
-	go.opentelemetry.io/otel/metric v1.39.0 // indirect
-	go.opentelemetry.io/otel/trace v1.39.0 // indirect
+	go.opentelemetry.io/otel v1.44.0 // indirect
+	go.opentelemetry.io/otel/metric v1.44.0 // indirect
+	go.opentelemetry.io/otel/trace v1.44.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.1 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
