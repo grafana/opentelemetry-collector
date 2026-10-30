@@ -1,6 +1,6 @@
 module go.opentelemetry.io/collector/internal/memorylimiter
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/shirou/gopsutil/v4 v4.25.12
@@ -40,7 +40,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.39.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
